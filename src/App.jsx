@@ -116,9 +116,9 @@ export default function App() {
                 instruments: [
                   {
                     method: 'card',
-                    networks: ['VISA', 'MC', 'RUPAY'],
+                    networks: ['VISA', 'MC', 'RUPAY', 'AMEX', 'DINERS', 'JCB'],
                     types: ['credit', 'debit'],
-                    issuer_country: 'IN'
+                    issuer_country: 'ALL'
                   }
                 ]
               },
@@ -138,13 +138,34 @@ export default function App() {
                     banks: ['HDFC', 'ICICI', 'SBI', 'AXIS', 'KOTAK']
                   }
                 ]
+              },
+              wallet: {
+                name: 'Pay by Wallet',
+                instruments: [
+                  {
+                    method: 'wallet',
+                    wallets: ['paytm', 'mobikwik', 'phonepe', 'amazonpay']
+                  }
+                ]
               }
             },
-            sequence: ['block.card', 'block.upi', 'block.netbanking'],
+            sequence: ['block.card', 'block.upi', 'block.netbanking', 'block.wallet'],
             preferences: {
               show_default_blocks: true
             }
           }
+        },
+        allow_rotation: true,
+        remember_customer: false,
+        readonly: {
+          email: false,
+          contact: false,
+          name: false
+        },
+        hidden: {
+          email: false,
+          contact: false,
+          name: false
         },
         handler: async function (response) {
           try {
