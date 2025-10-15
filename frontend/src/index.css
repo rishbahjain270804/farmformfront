@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand: #2f9737;
+}
+
+.brand-gradient {
+  background: linear-gradient(90deg, #2f9737 0%, #69d06f 50%, #2f9737 100%);
+}
