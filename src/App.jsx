@@ -79,17 +79,43 @@ export default function App() {
 
   // Test backend connectivity on component mount
   useEffect(() => {
-    const testConnection = async () => {
+    const testConnection = async (retryCount = 0) => {
       try {
-        console.log('🚀 Testing PRODUCTION backend connection to:', API_BASE)
-        const response = await api.get('/api/test')
+        console.log(`🚀 Testing PRODUCTION backend connection (attempt ${retryCount + 1}) to:`, API_BASE)
+        
+        // Add explicit headers for CORS
+        const response = await api.get('/api/test', {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        })
+        
         console.log('✅ PRODUCTION backend connection successful:', response.data)
         setBackendConnected(true)
         setConnectionError(null)
       } catch (error) {
         console.error('❌ PRODUCTION backend connection failed:', error)
+        
+        // Retry up to 3 times with delay
+        if (retryCount < 2) {
+          console.log(`🔄 Retrying connection in 2 seconds... (${retryCount + 1}/3)`)
+          setTimeout(() => testConnection(retryCount + 1), 2000)
+          return
+        }
+        
         setBackendConnected(false)
-        setConnectionError(error.message || 'Cannot connect to production backend server')
+        let errorMessage = 'Cannot connect to production backend server'
+        
+        if (error.code === 'NETWORK_ERROR') {
+          errorMessage = 'Network error - Backend may be starting up'
+        } else if (error.response?.status === 404) {
+          errorMessage = 'API endpoint not found - Backend may be updating'
+        } else if (error.message.includes('CORS')) {
+          errorMessage = 'CORS policy error - Backend configuration issue'
+        }
+        
+        setConnectionError(errorMessage)
       }
     }
     
