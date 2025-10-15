@@ -25,12 +25,11 @@ This is the frontend application for the Farmer Form project built with React, V
 
 2. Install dependencies:
    ```bash
-   cd frontend
    npm install
    ```
 
 3. Set up environment variables:
-   Create a `.env` file in the frontend directory with:
+   Create a `.env` file in the root directory with:
    ```
    VITE_API_URL=http://localhost:5000
    VITE_RAZORPAY_KEY_ID=your_razorpay_key_id
@@ -49,7 +48,6 @@ This is the frontend application for the Farmer Form project built with React, V
 ## Project Structure
 
 ```
-frontend/
 ├── src/
 │   ├── App.jsx          # Main application component
 │   ├── main.jsx         # Application entry point
