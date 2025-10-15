@@ -108,6 +108,34 @@ export default function App() {
           contact: formData.contactNumber
         },
         theme: { color: '#2f9737' },
+        config: {
+          display: {
+            blocks: {
+              card: {
+                name: 'Pay by Card',
+                instruments: [
+                  {
+                    method: 'card',
+                    networks: ['VISA', 'MC', 'RUPAY', 'AMEX'],
+                    types: ['credit', 'debit']
+                  }
+                ]
+              },
+              upi: {
+                name: 'Pay by UPI',
+                instruments: [
+                  {
+                    method: 'upi'
+                  }
+                ]
+              }
+            },
+            sequence: ['block.card', 'block.upi'],
+            preferences: {
+              show_default_blocks: true
+            }
+          }
+        },
         handler: async function (response) {
           try {
             const verify = await api.post('/api/verify-payment', {
