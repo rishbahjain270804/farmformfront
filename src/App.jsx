@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -66,6 +66,9 @@ function Hero() {
 export default function App() {
   const [submitting, setSubmitting] = useState(false)
   const [status, setStatus] = useState(null)
+  const [backendConnected, setBackendConnected] = useState(false)
+  const [connectionError, setConnectionError] = useState(null)
+  
   const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -73,6 +76,25 @@ export default function App() {
       livestock: []
     }
   })
+
+  // Test backend connectivity on component mount
+  useEffect(() => {
+    const testConnection = async () => {
+      try {
+        console.log('Testing backend connection to:', API_BASE)
+        const response = await api.get('/api/test')
+        console.log('Backend connection test successful:', response.data)
+        setBackendConnected(true)
+        setConnectionError(null)
+      } catch (error) {
+        console.error('Backend connection test failed:', error)
+        setBackendConnected(false)
+        setConnectionError(error.message || 'Cannot connect to backend server')
+      }
+    }
+    
+    testConnection()
+  }, [])
 
   const onSubmit = async (formData) => {
     setSubmitting(true)
@@ -177,6 +199,46 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col">
       <Hero />
+      
+      {/* Connection Status Indicator */}
+      {connectionError && (
+        <div className="bg-red-50 border-l-4 border-red-400 p-4 mx-6 mt-4">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-red-700">
+                <strong>Connection Error:</strong> {connectionError}
+                <br />
+                <small>Backend URL: {API_BASE}</small>
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {backendConnected && (
+        <div className="bg-green-50 border-l-4 border-green-400 p-4 mx-6 mt-4">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-green-700">
+                <strong>✅ Backend Connected Successfully</strong>
+                <br />
+                <small>Connected to: {API_BASE}</small>
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <main className="flex-1">
         <div className="max-w-5xl mx-auto px-6 py-10">
           <div className="bg-white shadow rounded-2xl p-6 sm:p-8">
