@@ -262,6 +262,8 @@ export default function App() {
                 <br />
                 <small>Backend: {API_BASE}</small>
                 <br />
+                <small>Frontend: https://farmformfront.vercel.app</small>
+                <br />
                 <small>Razorpay: {RAZORPAY_KEY_ID} (Live Keys)</small>
               </p>
             </div>
