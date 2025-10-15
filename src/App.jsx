@@ -31,7 +31,7 @@ const schema = z.object({
   localGroup: z.string().optional(),
   preferredSeason: z.enum(['Kharif','Rabi','Both']).optional(),
   remarks: z.string().optional(),
-  agreeFee: z.boolean().refine(v=>v===true, {message:'You must agree to pay ₹0 (Testing Mode)'})
+  agreeFee: z.boolean().refine(v=>v===true, {message:'You must agree to pay ₹300'})
 })
 
 function Hero() {
@@ -108,65 +108,6 @@ export default function App() {
           contact: formData.contactNumber
         },
         theme: { color: '#2f9737' },
-        config: {
-          display: {
-            blocks: {
-              card: {
-                name: 'Pay by Card',
-                instruments: [
-                  {
-                    method: 'card',
-                    networks: ['VISA', 'MC', 'RUPAY', 'AMEX', 'DINERS', 'JCB'],
-                    types: ['credit', 'debit'],
-                    issuer_country: 'ALL'
-                  }
-                ]
-              },
-              upi: {
-                name: 'Pay by UPI',
-                instruments: [
-                  {
-                    method: 'upi'
-                  }
-                ]
-              },
-              netbanking: {
-                name: 'Pay by Netbanking',
-                instruments: [
-                  {
-                    method: 'netbanking',
-                    banks: ['HDFC', 'ICICI', 'SBI', 'AXIS', 'KOTAK']
-                  }
-                ]
-              },
-              wallet: {
-                name: 'Pay by Wallet',
-                instruments: [
-                  {
-                    method: 'wallet',
-                    wallets: ['paytm', 'mobikwik', 'phonepe', 'amazonpay']
-                  }
-                ]
-              }
-            },
-            sequence: ['block.card', 'block.upi', 'block.netbanking', 'block.wallet'],
-            preferences: {
-              show_default_blocks: true
-            }
-          }
-        },
-        allow_rotation: true,
-        remember_customer: false,
-        readonly: {
-          email: false,
-          contact: false,
-          name: false
-        },
-        hidden: {
-          email: false,
-          contact: false,
-          name: false
-        },
         handler: async function (response) {
           try {
             const verify = await api.post('/api/verify-payment', {
@@ -232,7 +173,7 @@ export default function App() {
             <h3 className="text-xl font-bold">Get Your PGS–India Natural Farming Certificate for Your Land</h3>
             <p className="mt-2 text-gray-600">
               Your Regional Council will guide training, field verification, certification, and market support.
-              <strong> Registration, Certification &amp; support fee: ₹0 (Testing Mode)</strong>.
+              <strong> Registration, Certification &amp; support fee: ₹300 only</strong>.
             </p>
 
             <form onSubmit={handleSubmit(onSubmit)} className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -437,7 +378,7 @@ export default function App() {
               {/* Fee agree */}
               <div className="md:col-span-2 flex items-center gap-2">
                 <input type="checkbox" {...register('agreeFee')} />
-                <span>For Nature Farming Certificate &amp; Support – <strong>₹0 (Testing)</strong> <span className="text-red-600">*</span></span>
+                <span>For Nature Farming Certificate &amp; Support – <strong>₹ 300</strong> <span className="text-red-600">*</span></span>
               </div>
               {errors.agreeFee && <p className="text-red-600 text-sm md:col-span-2">{errors.agreeFee.message}</p>}
 
@@ -448,7 +389,7 @@ export default function App() {
                   disabled={submitting}
                   className="px-5 py-3 rounded-xl bg-cyano-600 hover:bg-cyano-700 text-white font-semibold disabled:opacity-60"
                 >
-                  {submitting ? 'Processing…' : 'Pay ₹0 & Submit (Testing)'}
+                  {submitting ? 'Processing…' : 'Pay ₹300 & Submit'}
                 </button>
                 <a href="https://cyanoindia.com" target="_blank" rel="noreferrer" className="px-5 py-3 rounded-xl border font-semibold">
                   Learn more at cyanoindia.com
