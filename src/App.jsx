@@ -82,6 +82,11 @@ export default function App() {
       console.log('API_BASE:', API_BASE)
       console.log('RAZORPAY_KEY_ID:', RAZORPAY_KEY_ID)
       
+      // Test backend connectivity first
+      console.log('Testing backend connectivity...')
+      const healthCheck = await api.get('/health')
+      console.log('Backend health check:', healthCheck.data)
+      
       const { data } = await api.post('/api/create-order', formData)
       console.log('Order created:', data)
       const { order, registrationId } = data
