@@ -237,9 +237,9 @@ export default function App() {
             </div>
             <div className="ml-3">
               <p className="text-sm text-red-700">
-                <strong>🚨 PRODUCTION Connection Error:</strong> {connectionError}
+                <strong>🚨 Connection Error:</strong> Unable to connect to payment system
                 <br />
-                <small>Backend URL: {API_BASE}</small>
+                <small>Please try refreshing the page</small>
               </p>
             </div>
           </div>
@@ -256,11 +256,7 @@ export default function App() {
             </div>
             <div className="ml-3">
               <p className="text-sm text-green-700">
-                <strong>✅ LIVE PRODUCTION Backend Connected Successfully</strong>
-                <br />
-                <small>Backend: {API_BASE}</small>
-                <br />
-                <small>Frontend: https://farmformfront.vercel.app</small>
+                <strong>✅ Connection Established Successfully</strong>
                 <br />
                 <small>🔴 LIVE PAYMENT SYSTEM ACTIVE</small>
               </p>
