@@ -240,8 +240,6 @@ export default function App() {
                 <strong>🚨 PRODUCTION Connection Error:</strong> {connectionError}
                 <br />
                 <small>Backend URL: {API_BASE}</small>
-                <br />
-                <small>Razorpay Key: {RAZORPAY_KEY_ID}</small>
               </p>
             </div>
           </div>
@@ -264,7 +262,7 @@ export default function App() {
                 <br />
                 <small>Frontend: https://farmformfront.vercel.app</small>
                 <br />
-                <small>Razorpay: {RAZORPAY_KEY_ID} (🔴 LIVE KEYS - REAL PAYMENTS)</small>
+                <small>🔴 LIVE PAYMENT SYSTEM ACTIVE</small>
               </p>
             </div>
           </div>
