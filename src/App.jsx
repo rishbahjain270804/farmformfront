@@ -91,9 +91,16 @@ export default function App() {
       console.log('Order created:', data)
       const { order, registrationId } = data
 
+      console.log('Checking Razorpay availability...')
+      console.log('window.Razorpay:', window.Razorpay)
+      console.log('typeof window.Razorpay:', typeof window.Razorpay)
+
       if (!window.Razorpay) {
         throw new Error('Razorpay script not loaded')
       }
+
+      console.log('Creating Razorpay options with key:', RAZORPAY_KEY_ID)
+      console.log('Order details:', order)
 
       const options = {
         key: RAZORPAY_KEY_ID,
@@ -129,7 +136,10 @@ export default function App() {
         }
       }
 
+      console.log('Initializing Razorpay with options:', options)
       const rzp = new window.Razorpay(options)
+      console.log('Razorpay instance created:', rzp)
+      console.log('Opening Razorpay modal...')
       rzp.open()
 
     } catch (e) {
