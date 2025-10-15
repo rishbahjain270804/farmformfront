@@ -6,4 +6,8 @@ export const RAZORPAY_KEY_SECRET = import.meta.env.VITE_RAZORPAY_KEY_SECRET || '
 
 export const api = axios.create({
   baseURL: API_BASE,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json'
+  }
 })

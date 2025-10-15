@@ -81,15 +81,15 @@ export default function App() {
   useEffect(() => {
     const testConnection = async () => {
       try {
-        console.log('Testing backend connection to:', API_BASE)
+        console.log('🚀 Testing PRODUCTION backend connection to:', API_BASE)
         const response = await api.get('/api/test')
-        console.log('Backend connection test successful:', response.data)
+        console.log('✅ PRODUCTION backend connection successful:', response.data)
         setBackendConnected(true)
         setConnectionError(null)
       } catch (error) {
-        console.error('Backend connection test failed:', error)
+        console.error('❌ PRODUCTION backend connection failed:', error)
         setBackendConnected(false)
-        setConnectionError(error.message || 'Cannot connect to backend server')
+        setConnectionError(error.message || 'Cannot connect to production backend server')
       }
     }
     
@@ -211,9 +211,11 @@ export default function App() {
             </div>
             <div className="ml-3">
               <p className="text-sm text-red-700">
-                <strong>Connection Error:</strong> {connectionError}
+                <strong>🚨 PRODUCTION Connection Error:</strong> {connectionError}
                 <br />
                 <small>Backend URL: {API_BASE}</small>
+                <br />
+                <small>Razorpay Key: {RAZORPAY_KEY_ID}</small>
               </p>
             </div>
           </div>
@@ -230,9 +232,11 @@ export default function App() {
             </div>
             <div className="ml-3">
               <p className="text-sm text-green-700">
-                <strong>✅ Backend Connected Successfully</strong>
+                <strong>✅ PRODUCTION Backend Connected Successfully</strong>
                 <br />
-                <small>Connected to: {API_BASE}</small>
+                <small>Backend: {API_BASE}</small>
+                <br />
+                <small>Razorpay: {RAZORPAY_KEY_ID} (Live Keys)</small>
               </p>
             </div>
           </div>
