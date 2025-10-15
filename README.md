@@ -31,7 +31,7 @@ This is the frontend application for the Farmer Form project built with React, V
 3. Set up environment variables:
    Create a `.env` file in the root directory with:
    ```
-   VITE_API_URL=http://localhost:5000
+   VITE_API_URL=https://farmformback.onrender.com
    VITE_RAZORPAY_KEY_ID=your_razorpay_key_id
    ```
 
