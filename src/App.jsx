@@ -504,7 +504,6 @@ export default function App() {
             <div className="mt-10 text-sm text-gray-500">
               <p>📞 WhatsApp: <a href="https://wa.me/918331919474" className="text-cyano-700 font-semibold">8331919474</a></p>
               <p>🌐 <a href="https://cyanoindia.com" className="text-cyano-700 font-semibold">cyanoindia.com</a></p>
-              <p>✉️ rexjain27@gmail.com</p>
             </div>
           </div>
         </div>
