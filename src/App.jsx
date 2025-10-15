@@ -258,13 +258,13 @@ export default function App() {
             </div>
             <div className="ml-3">
               <p className="text-sm text-green-700">
-                <strong>✅ PRODUCTION Backend Connected Successfully</strong>
+                <strong>✅ LIVE PRODUCTION Backend Connected Successfully</strong>
                 <br />
                 <small>Backend: {API_BASE}</small>
                 <br />
                 <small>Frontend: https://farmformfront.vercel.app</small>
                 <br />
-                <small>Razorpay: {RAZORPAY_KEY_ID} (Live Keys)</small>
+                <small>Razorpay: {RAZORPAY_KEY_ID} (🔴 LIVE KEYS - REAL PAYMENTS)</small>
               </p>
             </div>
           </div>
