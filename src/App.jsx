@@ -116,8 +116,9 @@ export default function App() {
                 instruments: [
                   {
                     method: 'card',
-                    networks: ['VISA', 'MC', 'RUPAY', 'AMEX'],
-                    types: ['credit', 'debit']
+                    networks: ['VISA', 'MC', 'RUPAY'],
+                    types: ['credit', 'debit'],
+                    issuer_country: 'IN'
                   }
                 ]
               },
@@ -128,9 +129,18 @@ export default function App() {
                     method: 'upi'
                   }
                 ]
+              },
+              netbanking: {
+                name: 'Pay by Netbanking',
+                instruments: [
+                  {
+                    method: 'netbanking',
+                    banks: ['HDFC', 'ICICI', 'SBI', 'AXIS', 'KOTAK']
+                  }
+                ]
               }
             },
-            sequence: ['block.card', 'block.upi'],
+            sequence: ['block.card', 'block.upi', 'block.netbanking'],
             preferences: {
               show_default_blocks: true
             }
