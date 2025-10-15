@@ -78,8 +78,17 @@ export default function App() {
     setSubmitting(true)
     setStatus(null)
     try {
+      console.log('Submitting form data:', formData)
+      console.log('API_BASE:', API_BASE)
+      console.log('RAZORPAY_KEY_ID:', RAZORPAY_KEY_ID)
+      
       const { data } = await api.post('/api/create-order', formData)
+      console.log('Order created:', data)
       const { order, registrationId } = data
+
+      if (!window.Razorpay) {
+        throw new Error('Razorpay script not loaded')
+      }
 
       const options = {
         key: RAZORPAY_KEY_ID,
@@ -119,8 +128,23 @@ export default function App() {
       rzp.open()
 
     } catch (e) {
-      console.error(e)
-      setStatus({ ok: false, message: "Unable to start payment. Please check your details or try again." })
+      console.error('Payment error:', e)
+      let errorMessage = "Unable to start payment. Please check your details or try again."
+      
+      if (e.response) {
+        // API error
+        console.error('API Error:', e.response.data)
+        errorMessage = `API Error: ${e.response.data?.error || e.response.statusText}`
+      } else if (e.request) {
+        // Network error
+        console.error('Network Error:', e.request)
+        errorMessage = "Network error. Please check your internet connection."
+      } else if (e.message) {
+        // Other error
+        errorMessage = e.message
+      }
+      
+      setStatus({ ok: false, message: errorMessage })
     } finally {
       setSubmitting(false)
     }
