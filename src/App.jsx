@@ -4,6 +4,18 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { api, API_BASE, RAZORPAY_KEY_ID } from './api'
 
+// Schema for individual crop
+const cropSchema = z.object({
+  cropName: z.string().min(1, "Crop name is required"),
+  cropType: z.string().min(1, "Crop type is required"),
+  variety: z.string().optional(),
+  areaAllocated: z.string().min(1, "Area is required"),
+  sowingDate: z.string().min(1, "Sowing date is required"),
+  expectedHarvestDate: z.string().optional(),
+  irrigationMethod: z.string().optional(),
+  expectedYield: z.string().optional(),
+})
+
 const schema = z.object({
   email: z.string().email(),
   registrationDate: z.string().min(1, "Required"),
@@ -18,10 +30,7 @@ const schema = z.object({
   aadhaarOrFarmerId: z.string().optional(),
   totalLand: z.string().min(1, "Required"),
   areaUnderNaturalHa: z.string().min(1, "Required"),
-  presentCrop: z.string().optional(),
-  sowingDate: z.string().min(1, "Required"),
-  harvestingDate: z.string().optional(),
-  cropTypes: z.string().min(1, "Required"),
+  crops: z.array(cropSchema).min(1, "At least one crop is required"),
   currentPractice: z.enum(['Natural','Organic','Conventional','Chemical']),
   yearsExperience: z.string().min(1, "Required"),
   irrigationSource: z.enum(['Borewell','Canal','Rainfed']),
@@ -63,17 +72,169 @@ function Hero() {
   )
 }
 
+// Component for individual crop entry
+function CropEntry({ index, crop, register, errors, onRemove, canRemove }) {
+  const cropTypes = [
+    'Cereal (Rice, Wheat, Maize, etc.)',
+    'Pulse (Chickpea, Lentil, Pigeon Pea, etc.)',
+    'Vegetable',
+    'Fruit',
+    'Spice',
+    'Oilseed',
+    'Cash Crop (Cotton, Sugarcane, etc.)',
+    'Forage/Fodder',
+    'Medicinal Plant',
+    'Other'
+  ]
+
+  const irrigationMethods = ['Drip', 'Sprinkler', 'Flood', 'Rainfed', 'Mixed']
+
+  return (
+    <div className="border-2 border-green-200 rounded-xl p-5 bg-green-50/30 relative">
+      <div className="flex items-center justify-between mb-4">
+        <h4 className="text-lg font-bold text-green-800 flex items-center gap-2">
+          <span className="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center text-sm font-bold">
+            {index + 1}
+          </span>
+          Crop Details
+        </h4>
+        {canRemove && (
+          <button
+            type="button"
+            onClick={() => onRemove(index)}
+            className="text-red-600 hover:text-red-800 font-semibold px-3 py-1 rounded-lg hover:bg-red-50 transition-colors"
+          >
+            ✕ Remove
+          </button>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Crop Name */}
+        <div>
+          <label className="font-medium text-gray-700">
+            Crop Name <span className="text-red-600">*</span>
+          </label>
+          <input
+            className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-green-500 focus:outline-none"
+            placeholder="e.g., Rice, Wheat, Tomato"
+            {...register(`crops.${index}.cropName`)}
+          />
+          {errors.crops?.[index]?.cropName && (
+            <p className="text-red-600 text-sm mt-1">{errors.crops[index].cropName.message}</p>
+          )}
+        </div>
+
+        {/* Crop Type */}
+        <div>
+          <label className="font-medium text-gray-700">
+            Crop Type <span className="text-red-600">*</span>
+          </label>
+          <select
+            className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-green-500 focus:outline-none"
+            {...register(`crops.${index}.cropType`)}
+          >
+            <option value="">Select crop type...</option>
+            {cropTypes.map(type => (
+              <option key={type} value={type}>{type}</option>
+            ))}
+          </select>
+          {errors.crops?.[index]?.cropType && (
+            <p className="text-red-600 text-sm mt-1">{errors.crops[index].cropType.message}</p>
+          )}
+        </div>
+
+        {/* Variety */}
+        <div>
+          <label className="font-medium text-gray-700">Variety (Optional)</label>
+          <input
+            className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-green-500 focus:outline-none"
+            placeholder="e.g., Basmati, IR-64"
+            {...register(`crops.${index}.variety`)}
+          />
+        </div>
+
+        {/* Area Allocated */}
+        <div>
+          <label className="font-medium text-gray-700">
+            Area Allocated <span className="text-red-600">*</span>
+          </label>
+          <input
+            className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-green-500 focus:outline-none"
+            placeholder="e.g., 2.5 Acres or 1 Ha"
+            {...register(`crops.${index}.areaAllocated`)}
+          />
+          {errors.crops?.[index]?.areaAllocated && (
+            <p className="text-red-600 text-sm mt-1">{errors.crops[index].areaAllocated.message}</p>
+          )}
+        </div>
+
+        {/* Sowing Date */}
+        <div>
+          <label className="font-medium text-gray-700">
+            Sowing Date <span className="text-red-600">*</span>
+          </label>
+          <input
+            type="date"
+            className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-green-500 focus:outline-none"
+            {...register(`crops.${index}.sowingDate`)}
+          />
+          {errors.crops?.[index]?.sowingDate && (
+            <p className="text-red-600 text-sm mt-1">{errors.crops[index].sowingDate.message}</p>
+          )}
+        </div>
+
+        {/* Expected Harvest Date */}
+        <div>
+          <label className="font-medium text-gray-700">Expected Harvest Date</label>
+          <input
+            type="date"
+            className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-green-500 focus:outline-none"
+            {...register(`crops.${index}.expectedHarvestDate`)}
+          />
+        </div>
+
+        {/* Irrigation Method */}
+        <div>
+          <label className="font-medium text-gray-700">Irrigation Method</label>
+          <select
+            className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-green-500 focus:outline-none"
+            {...register(`crops.${index}.irrigationMethod`)}
+          >
+            <option value="">Select method...</option>
+            {irrigationMethods.map(method => (
+              <option key={method} value={method}>{method}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Expected Yield */}
+        <div>
+          <label className="font-medium text-gray-700">Expected Yield</label>
+          <input
+            className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-green-500 focus:outline-none"
+            placeholder="e.g., 30 quintals/acre"
+            {...register(`crops.${index}.expectedYield`)}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function App() {
   const [submitting, setSubmitting] = useState(false)
   const [status, setStatus] = useState(null)
   const [backendConnected, setBackendConnected] = useState(false)
   const [connectionError, setConnectionError] = useState(null)
+  const [crops, setCrops] = useState([{ id: Date.now() }])
   
   const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
       registrationDate: new Date().toISOString().slice(0,10),
-      livestock: []
+      livestock: [],
+      crops: [{}]
     }
   })
 
@@ -121,6 +282,22 @@ export default function App() {
     
     testConnection()
   }, [])
+
+  // Crop management functions
+  const addCrop = () => {
+    setCrops([...crops, { id: Date.now() }])
+  }
+
+  const removeCrop = (index) => {
+    if (crops.length > 1) {
+      const newCrops = crops.filter((_, i) => i !== index)
+      setCrops(newCrops)
+      // Also update form values
+      const currentCrops = watch('crops') || []
+      const updatedCrops = currentCrops.filter((_, i) => i !== index)
+      setValue('crops', updatedCrops, { shouldValidate: true })
+    }
+  }
 
   const onSubmit = async (formData) => {
     setSubmitting(true)
@@ -274,229 +451,305 @@ export default function App() {
               <strong> Registration, Certification &amp; support fee: ₹300 only</strong>.
             </p>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-5">
-              {/* Email (required) */}
-              <div className="col-span-1">
-                <label className="font-medium">Email <span className="text-red-600">*</span></label>
-                <input type="email" className="mt-1 w-full border rounded-lg p-2" placeholder="you@example.com" {...register('email')} />
-                {errors.email && <p className="text-red-600 text-sm">{errors.email.message}</p>}
-              </div>
+            <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-8">
+              {/* Personal Information Section */}
+              <div className="border-l-4 border-blue-500 bg-blue-50/50 p-6 rounded-r-xl">
+                <h3 className="text-xl font-bold text-blue-900 mb-4 flex items-center gap-2">
+                  👤 Personal Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  {/* Email (required) */}
+                  <div className="col-span-1">
+                    <label className="font-medium text-gray-700">Email <span className="text-red-600">*</span></label>
+                    <input type="email" className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none" placeholder="you@example.com" {...register('email')} />
+                    {errors.email && <p className="text-red-600 text-sm">{errors.email.message}</p>}
+                  </div>
 
-              {/* Registration Date */}
-              <div className="col-span-1">
-                <label className="font-medium">Registration Date <span className="text-red-600">*</span></label>
-                <input type="date" className="mt-1 w-full border rounded-lg p-2" {...register('registrationDate')} />
-                {errors.registrationDate && <p className="text-red-600 text-sm">{errors.registrationDate.message}</p>}
-              </div>
+                  {/* Registration Date */}
+                  <div className="col-span-1">
+                    <label className="font-medium text-gray-700">Registration Date <span className="text-red-600">*</span></label>
+                    <input type="date" className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none" {...register('registrationDate')} />
+                    {errors.registrationDate && <p className="text-red-600 text-sm">{errors.registrationDate.message}</p>}
+                  </div>
 
-              {/* Farmer Name */}
-              <div>
-                <label className="font-medium">Farmer Name <span className="text-red-600">*</span></label>
-                <input className="mt-1 w-full border rounded-lg p-2" {...register('farmerName')} />
-                {errors.farmerName && <p className="text-red-600 text-sm">{errors.farmerName.message}</p>}
-              </div>
+                  {/* Farmer Name */}
+                  <div>
+                    <label className="font-medium text-gray-700">Farmer Name <span className="text-red-600">*</span></label>
+                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none" {...register('farmerName')} />
+                    {errors.farmerName && <p className="text-red-600 text-sm">{errors.farmerName.message}</p>}
+                  </div>
 
-              {/* Father/Spouse Name */}
-              <div>
-                <label className="font-medium">Father / Spouse Name <span className="text-red-600">*</span></label>
-                <input className="mt-1 w-full border rounded-lg p-2" {...register('fatherSpouseName')} />
-                {errors.fatherSpouseName && <p className="text-red-600 text-sm">{errors.fatherSpouseName.message}</p>}
-              </div>
+                  {/* Father/Spouse Name */}
+                  <div>
+                    <label className="font-medium text-gray-700">Father / Spouse Name <span className="text-red-600">*</span></label>
+                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none" {...register('fatherSpouseName')} />
+                    {errors.fatherSpouseName && <p className="text-red-600 text-sm">{errors.fatherSpouseName.message}</p>}
+                  </div>
 
-              {/* Contact Number */}
-              <div>
-                <label className="font-medium">Contact Number <span className="text-red-600">*</span></label>
-                <input className="mt-1 w-full border rounded-lg p-2" placeholder="10-15 digits" {...register('contactNumber')} />
-                {errors.contactNumber && <p className="text-red-600 text-sm">{errors.contactNumber.message}</p>}
-              </div>
+                  {/* Contact Number */}
+                  <div>
+                    <label className="font-medium text-gray-700">Contact Number <span className="text-red-600">*</span></label>
+                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none" placeholder="10-15 digits" {...register('contactNumber')} />
+                    {errors.contactNumber && <p className="text-red-600 text-sm">{errors.contactNumber.message}</p>}
+                  </div>
 
-              {/* Alternate Email */}
-              <div>
-                <label className="font-medium">Email ID (optional)</label>
-                <input type="email" className="mt-1 w-full border rounded-lg p-2" placeholder="alternate@example.com" {...register('altEmail')} />
-              </div>
-
-              {/* Address fields */}
-              <div>
-                <label className="font-medium">Village / Panchayat <span className="text-red-600">*</span></label>
-                <input className="mt-1 w-full border rounded-lg p-2" {...register('village')} />
-                {errors.village && <p className="text-red-600 text-sm">{errors.village.message}</p>}
-              </div>
-              <div>
-                <label className="font-medium">Mandal / Block <span className="text-red-600">*</span></label>
-                <input className="mt-1 w-full border rounded-lg p-2" {...register('mandal')} />
-                {errors.mandal && <p className="text-red-600 text-sm">{errors.mandal.message}</p>}
-              </div>
-              <div>
-                <label className="font-medium">District <span className="text-red-600">*</span></label>
-                <input className="mt-1 w-full border rounded-lg p-2" {...register('district')} />
-                {errors.district && <p className="text-red-600 text-sm">{errors.district.message}</p>}
-              </div>
-              <div>
-                <label className="font-medium">State <span className="text-red-600">*</span></label>
-                <input className="mt-1 w-full border rounded-lg p-2" {...register('state')} />
-                {errors.state && <p className="text-red-600 text-sm">{errors.state.message}</p>}
-              </div>
-
-              {/* Aadhaar / Farmer ID */}
-              <div className="md:col-span-2">
-                <label className="font-medium">Aadhaar / Farmer ID (Optional)</label>
-                <input className="mt-1 w-full border rounded-lg p-2" {...register('aadhaarOrFarmerId')} />
-              </div>
-
-              {/* Land size */}
-              <div>
-                <label className="font-medium">Total Land (in Acres or Hectares) <span className="text-red-600">*</span></label>
-                <input className="mt-1 w-full border rounded-lg p-2" placeholder="e.g., 2.5 Acres" {...register('totalLand')} />
-                {errors.totalLand && <p className="text-red-600 text-sm">{errors.totalLand.message}</p>}
-              </div>
-              <div>
-                <label className="font-medium">Area Under Natural Farming (Ha) <span className="text-red-600">*</span></label>
-                <input className="mt-1 w-full border rounded-lg p-2" placeholder="e.g., 1.2" {...register('areaUnderNaturalHa')} />
-                {errors.areaUnderNaturalHa && <p className="text-red-600 text-sm">{errors.areaUnderNaturalHa.message}</p>}
-              </div>
-
-              {/* Crop fields */}
-              <div>
-                <label className="font-medium">Present Crop</label>
-                <input className="mt-1 w-full border rounded-lg p-2" {...register('presentCrop')} />
-              </div>
-              <div>
-                <label className="font-medium">Sowing Date <span className="text-red-600">*</span></label>
-                <input type="date" className="mt-1 w-full border rounded-lg p-2" {...register('sowingDate')} />
-                {errors.sowingDate && <p className="text-red-600 text-sm">{errors.sowingDate.message}</p>}
-              </div>
-              <div>
-                <label className="font-medium">Harvesting Date</label>
-                <input type="date" className="mt-1 w-full border rounded-lg p-2" {...register('harvestingDate')} />
-              </div>
-              <div>
-                <label className="font-medium">Crop Type(s) <span className="text-red-600">*</span></label>
-                <input className="mt-1 w-full border rounded-lg p-2" placeholder="e.g., Rice, Millets" {...register('cropTypes')} />
-                {errors.cropTypes && <p className="text-red-600 text-sm">{errors.cropTypes.message}</p>}
-              </div>
-
-              {/* Current Farming Practice */}
-              <div>
-                <label className="font-medium">Current Farming Practice <span className="text-red-600">*</span></label>
-                <select className="mt-1 w-full border rounded-lg p-2" {...register('currentPractice')}>
-                  <option value="Natural">Natural</option>
-                  <option value="Organic">Organic</option>
-                  <option value="Conventional">Conventional</option>
-                  <option value="Chemical">Chemical</option>
-                </select>
-              </div>
-
-              {/* Years of experience */}
-              <div>
-                <label className="font-medium">Years of Farming Experience <span className="text-red-600">*</span></label>
-                <input className="mt-1 w-full border rounded-lg p-2" placeholder="e.g., 5" {...register('yearsExperience')} />
-                {errors.yearsExperience && <p className="text-red-600 text-sm">{errors.yearsExperience.message}</p>}
-              </div>
-
-              {/* Irrigation Source */}
-              <div>
-                <label className="font-medium">Irrigation Source <span className="text-red-600">*</span></label>
-                <div className="mt-2 flex gap-4">
-                  {['Borewell','Canal','Rainfed'].map(opt => (
-                    <label key={opt} className="inline-flex items-center gap-2">
-                      <input type="radio" value={opt} {...register('irrigationSource')} />
-                      <span>{opt}</span>
-                    </label>
-                  ))}
-                </div>
-                {errors.irrigationSource && <p className="text-red-600 text-sm">{errors.irrigationSource.message}</p>}
-              </div>
-
-              {/* Livestock */}
-              <div>
-                <label className="font-medium">Livestock (if any)</label>
-                <div className="mt-2 grid grid-cols-2 gap-2">
-                  {['POULTRY','AQUA','COW','BUFFALO','GOAT','SHEEP','YAK','CAMEL','None'].map(opt => (
-                    <label key={opt} className="inline-flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={(watch('livestock')||[]).includes(opt)}
-                        onChange={() => toggleLivestock(opt)}
-                      />
-                      <span>{opt}</span>
-                    </label>
-                  ))}
+                  {/* Alternate Email */}
+                  <div>
+                    <label className="font-medium text-gray-700">Email ID (optional)</label>
+                    <input type="email" className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none" placeholder="alternate@example.com" {...register('altEmail')} />
+                  </div>
                 </div>
               </div>
 
-              {/* Willing to adopt / training */}
-              <div>
-                <label className="font-medium">Willing to Adopt Natural Inputs?</label>
-                <div className="mt-2 flex gap-4">
-                  {['Yes','No'].map(opt => (
-                    <label key={opt} className="inline-flex items-center gap-2">
-                      <input type="radio" value={opt} {...register('willingNaturalInputs')} />
-                      <span>{opt}</span>
-                    </label>
-                  ))}
+              {/* Address Information Section */}
+              <div className="border-l-4 border-purple-500 bg-purple-50/50 p-6 rounded-r-xl">
+                <h3 className="text-xl font-bold text-purple-900 mb-4 flex items-center gap-2">
+                  📍 Address Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  {/* Address fields */}
+                  <div>
+                    <label className="font-medium text-gray-700">Village / Panchayat <span className="text-red-600">*</span></label>
+                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-purple-500 focus:outline-none" {...register('village')} />
+                    {errors.village && <p className="text-red-600 text-sm">{errors.village.message}</p>}
+                  </div>
+                  <div>
+                    <label className="font-medium text-gray-700">Mandal / Block <span className="text-red-600">*</span></label>
+                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-purple-500 focus:outline-none" {...register('mandal')} />
+                    {errors.mandal && <p className="text-red-600 text-sm">{errors.mandal.message}</p>}
+                  </div>
+                  <div>
+                    <label className="font-medium text-gray-700">District <span className="text-red-600">*</span></label>
+                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-purple-500 focus:outline-none" {...register('district')} />
+                    {errors.district && <p className="text-red-600 text-sm">{errors.district.message}</p>}
+                  </div>
+                  <div>
+                    <label className="font-medium text-gray-700">State <span className="text-red-600">*</span></label>
+                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-purple-500 focus:outline-none" {...register('state')} />
+                    {errors.state && <p className="text-red-600 text-sm">{errors.state.message}</p>}
+                  </div>
+
+                  {/* Aadhaar / Farmer ID */}
+                  <div className="md:col-span-2">
+                    <label className="font-medium text-gray-700">Aadhaar / Farmer ID (Optional)</label>
+                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-purple-500 focus:outline-none" {...register('aadhaarOrFarmerId')} />
+                  </div>
                 </div>
               </div>
 
-              <div>
-                <label className="font-medium">Training Required?</label>
-                <div className="mt-2 flex gap-4">
-                  {['Yes','No'].map(opt => (
-                    <label key={opt} className="inline-flex items-center gap-2">
-                      <input type="radio" value={opt} {...register('trainingRequired')} />
-                      <span>{opt}</span>
-                    </label>
-                  ))}
+              {/* Land Information Section */}
+              <div className="border-l-4 border-amber-500 bg-amber-50/50 p-6 rounded-r-xl">
+                <h3 className="text-xl font-bold text-amber-900 mb-4 flex items-center gap-2">
+                  🏞️ Land Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  {/* Land size */}
+                  <div>
+                    <label className="font-medium text-gray-700">Total Land (in Acres or Hectares) <span className="text-red-600">*</span></label>
+                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-amber-500 focus:outline-none" placeholder="e.g., 2.5 Acres" {...register('totalLand')} />
+                    {errors.totalLand && <p className="text-red-600 text-sm">{errors.totalLand.message}</p>}
+                  </div>
+                  <div>
+                    <label className="font-medium text-gray-700">Area Under Natural Farming (Ha) <span className="text-red-600">*</span></label>
+                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-amber-500 focus:outline-none" placeholder="e.g., 1.2" {...register('areaUnderNaturalHa')} />
+                    {errors.areaUnderNaturalHa && <p className="text-red-600 text-sm">{errors.areaUnderNaturalHa.message}</p>}
+                  </div>
                 </div>
               </div>
 
-              {/* Local group */}
-              <div className="md:col-span-2">
-                <label className="font-medium">Local Group Name / SHG / FPO</label>
-                <input className="mt-1 w-full border rounded-lg p-2" {...register('localGroup')} />
+              {/* Multi-Crop Section */}
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-xl p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h3 className="text-2xl font-bold text-green-800 flex items-center gap-2">
+                      🌱 Crop Details
+                    </h3>
+                    <p className="text-sm text-gray-600 mt-1">Add details for each crop you cultivate</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={addCrop}
+                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-colors flex items-center gap-2"
+                  >
+                    <span className="text-xl">+</span> Add Another Crop
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  {crops.map((crop, index) => (
+                    <CropEntry
+                      key={crop.id}
+                      index={index}
+                      crop={crop}
+                      register={register}
+                      errors={errors}
+                      onRemove={removeCrop}
+                      canRemove={crops.length > 1}
+                    />
+                  ))}
+                </div>
+                
+                {errors.crops && typeof errors.crops.message === 'string' && (
+                  <p className="text-red-600 text-sm mt-3">{errors.crops.message}</p>
+                )}
               </div>
 
-              {/* Preferred season */}
-              <div>
-                <label className="font-medium">Preferred Cropping Season</label>
-                <select className="mt-1 w-full border rounded-lg p-2" {...register('preferredSeason')}>
-                  <option value="">Select…</option>
-                  <option value="Kharif">Kharif</option>
-                  <option value="Rabi">Rabi</option>
-                  <option value="Both">Both</option>
-                </select>
+              {/* Farming Practice & Experience Section */}
+              <div className="border-l-4 border-teal-500 bg-teal-50/50 p-6 rounded-r-xl">
+                <h3 className="text-xl font-bold text-teal-900 mb-4 flex items-center gap-2">
+                  🚜 Farming Practice & Experience
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  {/* Current Farming Practice */}
+                  <div>
+                    <label className="font-medium text-gray-700">Current Farming Practice <span className="text-red-600">*</span></label>
+                    <select className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-teal-500 focus:outline-none" {...register('currentPractice')}>
+                      <option value="Natural">Natural</option>
+                      <option value="Organic">Organic</option>
+                      <option value="Conventional">Conventional</option>
+                      <option value="Chemical">Chemical</option>
+                    </select>
+                  </div>
+
+                  {/* Years of experience */}
+                  <div>
+                    <label className="font-medium text-gray-700">Years of Farming Experience <span className="text-red-600">*</span></label>
+                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-teal-500 focus:outline-none" placeholder="e.g., 5" {...register('yearsExperience')} />
+                    {errors.yearsExperience && <p className="text-red-600 text-sm">{errors.yearsExperience.message}</p>}
+                  </div>
+
+                  {/* Irrigation Source */}
+                  <div className="md:col-span-2">
+                    <label className="font-medium text-gray-700">Irrigation Source <span className="text-red-600">*</span></label>
+                    <div className="mt-2 flex gap-4">
+                      {['Borewell','Canal','Rainfed'].map(opt => (
+                        <label key={opt} className="inline-flex items-center gap-2 cursor-pointer">
+                          <input type="radio" value={opt} {...register('irrigationSource')} className="w-4 h-4 text-teal-600" />
+                          <span>{opt}</span>
+                        </label>
+                      ))}
+                    </div>
+                    {errors.irrigationSource && <p className="text-red-600 text-sm">{errors.irrigationSource.message}</p>}
+                  </div>
+
+                  {/* Livestock */}
+                  <div className="md:col-span-2">
+                    <label className="font-medium text-gray-700">Livestock (if any)</label>
+                    <div className="mt-2 grid grid-cols-2 md:grid-cols-3 gap-3">
+                      {['POULTRY','AQUA','COW','BUFFALO','GOAT','SHEEP','YAK','CAMEL','None'].map(opt => (
+                        <label key={opt} className="inline-flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={(watch('livestock')||[]).includes(opt)}
+                            onChange={() => toggleLivestock(opt)}
+                            className="w-4 h-4 text-teal-600 rounded"
+                          />
+                          <span>{opt}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              {/* Remarks */}
-              <div className="md:col-span-2">
-                <label className="font-medium">Remarks / Comments</label>
-                <textarea rows="3" className="mt-1 w-full border rounded-lg p-2" {...register('remarks')} />
+              {/* Training & Support Section */}
+              <div className="border-l-4 border-indigo-500 bg-indigo-50/50 p-6 rounded-r-xl">
+                <h3 className="text-xl font-bold text-indigo-900 mb-4 flex items-center gap-2">
+                  📚 Training & Support
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  {/* Willing to adopt / training */}
+                  <div>
+                    <label className="font-medium text-gray-700">Willing to Adopt Natural Inputs?</label>
+                    <div className="mt-2 flex gap-4">
+                      {['Yes','No'].map(opt => (
+                        <label key={opt} className="inline-flex items-center gap-2 cursor-pointer">
+                          <input type="radio" value={opt} {...register('willingNaturalInputs')} className="w-4 h-4 text-indigo-600" />
+                          <span>{opt}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="font-medium text-gray-700">Training Required?</label>
+                    <div className="mt-2 flex gap-4">
+                      {['Yes','No'].map(opt => (
+                        <label key={opt} className="inline-flex items-center gap-2 cursor-pointer">
+                          <input type="radio" value={opt} {...register('trainingRequired')} className="w-4 h-4 text-indigo-600" />
+                          <span>{opt}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Local group */}
+                  <div className="md:col-span-2">
+                    <label className="font-medium text-gray-700">Local Group Name / SHG / FPO</label>
+                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-indigo-500 focus:outline-none" {...register('localGroup')} />
+                  </div>
+
+                  {/* Preferred season */}
+                  <div>
+                    <label className="font-medium text-gray-700">Preferred Cropping Season</label>
+                    <select className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-indigo-500 focus:outline-none" {...register('preferredSeason')}>
+                      <option value="">Select…</option>
+                      <option value="Kharif">Kharif</option>
+                      <option value="Rabi">Rabi</option>
+                      <option value="Both">Both</option>
+                    </select>
+                  </div>
+
+                  {/* Remarks */}
+                  <div className="md:col-span-2">
+                    <label className="font-medium text-gray-700">Remarks / Comments</label>
+                    <textarea rows="3" className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-indigo-500 focus:outline-none" {...register('remarks')} />
+                  </div>
+                </div>
               </div>
 
-              {/* Fee agree */}
-              <div className="md:col-span-2 flex items-center gap-2">
-                <input type="checkbox" {...register('agreeFee')} />
-                <span>For Nature Farming Certificate &amp; Support – <strong>₹ 300</strong> <span className="text-red-600">*</span></span>
+              {/* Payment Agreement Section */}
+              <div className="border-2 border-green-500 bg-green-50 p-6 rounded-xl">
+                <div className="flex items-start gap-3">
+                  <input type="checkbox" {...register('agreeFee')} className="w-5 h-5 mt-1 text-green-600 rounded" />
+                  <div>
+                    <p className="font-medium text-gray-800">
+                      I agree to pay the registration, certification & support fee of <strong className="text-green-700 text-lg">₹ 300</strong> 
+                      <span className="text-red-600"> *</span>
+                    </p>
+                    <p className="text-sm text-gray-600 mt-1">
+                      This fee covers PGS–India certification, training, field verification, and ongoing market support
+                    </p>
+                  </div>
+                </div>
+                {errors.agreeFee && <p className="text-red-600 text-sm mt-2">{errors.agreeFee.message}</p>}
               </div>
-              {errors.agreeFee && <p className="text-red-600 text-sm md:col-span-2">{errors.agreeFee.message}</p>}
 
               {/* Submit */}
-              <div className="md:col-span-2 flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-5 py-3 rounded-xl bg-cyano-600 hover:bg-cyano-700 text-white font-semibold disabled:opacity-60"
+                  className="px-8 py-4 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold text-lg shadow-lg disabled:opacity-60 transition-all transform hover:scale-105"
                 >
-                  {submitting ? 'Processing…' : 'Pay ₹300 & Submit'}
+                  {submitting ? '⏳ Processing…' : '💳 Pay ₹300 & Submit Registration'}
                 </button>
-                <a href="https://cyanoindia.com" target="_blank" rel="noreferrer" className="px-5 py-3 rounded-xl border font-semibold">
-                  Learn more at cyanoindia.com
+                <a 
+                  href="https://cyanoindia.com" 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="px-6 py-3 rounded-xl border-2 border-green-600 text-green-700 hover:bg-green-50 font-semibold transition-colors"
+                >
+                  🌐 Learn more at cyanoindia.com
                 </a>
               </div>
 
               {status && (
-                <div className={`md:col-span-2 mt-3 p-3 rounded-lg ${status.ok ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
-                  {status.message}
+                <div className={`mt-3 p-4 rounded-xl border-2 ${status.ok ? 'bg-green-50 border-green-400 text-green-800' : 'bg-red-50 border-red-400 text-red-800'}`}>
+                  <div className="flex items-start gap-2">
+                    <span className="text-2xl">{status.ok ? '✅' : '❌'}</span>
+                    <p className="font-medium">{status.message}</p>
+                  </div>
                 </div>
               )}
             </form>

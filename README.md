@@ -4,11 +4,24 @@ This is the frontend application for the Farmer Form project built with React, V
 
 ## Features
 
-- Responsive farmer registration form
-- Real-time form validation
-- Payment integration with Razorpay
-- Modern UI with Tailwind CSS
-- Fast development with Vite
+- **Multi-Crop Registration**: Farmers can add multiple crops with detailed information for each
+- **Enhanced UI Design**: Color-coded sections with intuitive organization
+- **Comprehensive Crop Details**: 
+  - Crop name, type, and variety
+  - Area allocation and planting dates
+  - Irrigation methods and expected yields
+- **Dynamic Form Fields**: Add/remove crops as needed
+- **Real-time Form Validation**: Zod-based validation with helpful error messages
+- **Organized Sections**:
+  - 👤 Personal Information
+  - 📍 Address Information
+  - 🏞️ Land Information
+  - 🌱 Crop Details (Multi-crop support)
+  - 🚜 Farming Practice & Experience
+  - 📚 Training & Support
+- **Payment Integration**: Secure Razorpay payment gateway
+- **Responsive Design**: Works on all devices
+- **Modern UI**: Tailwind CSS with gradient effects and smooth transitions
 
 ## Prerequisites
 
@@ -62,11 +75,24 @@ This is the frontend application for the Farmer Form project built with React, V
 
 ## Tech Stack
 
-- **Frontend Framework**: React
-- **Build Tool**: Vite
-- **Styling**: Tailwind CSS
+- **Frontend Framework**: React 18
+- **Build Tool**: Vite 5
+- **Styling**: Tailwind CSS 3
+- **Form Management**: React Hook Form
+- **Validation**: Zod
 - **HTTP Client**: Axios (for API calls)
 - **Payment Integration**: Razorpay
+
+## Recent Updates
+
+### Multi-Crop Feature (Latest)
+- Added ability to register multiple crops per farmer
+- Each crop includes: name, type, variety, area, sowing/harvest dates, irrigation method, and expected yield
+- Dynamic add/remove crop functionality
+- Enhanced UI with color-coded sections
+- Improved form validation and error handling
+
+For backend integration details, see `BACKEND_CHANGES_REQUIRED.md`.
 
 ## Available Scripts
 
