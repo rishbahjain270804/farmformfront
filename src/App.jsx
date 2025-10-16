@@ -17,12 +17,12 @@ const cropSchema = z.object({
 })
 
 const schema = z.object({
-  email: z.string().email(),
+  email: z.string().min(1, "Email is required").email("Invalid email address"),
   registrationDate: z.string().min(1, "Required"),
   farmerName: z.string().min(1, "Required"),
   fatherSpouseName: z.string().min(1, "Required"),
-  contactNumber: z.string().min(10).max(15),
-  altEmail: z.string().email().or(z.literal('')).optional(),
+  contactNumber: z.string().min(10, "Contact number must be at least 10 digits").max(15, "Contact number must be at most 15 digits"),
+  altEmail: z.string().email("Invalid email address").optional().or(z.literal('')),
   village: z.string().min(1, "Required"),
   mandal: z.string().min(1, "Required"),
   district: z.string().min(1, "Required"),
@@ -97,29 +97,31 @@ function ProgressBar({ currentStep, totalSteps }) {
 }
 
 // Form Input Component
-function FormInput({ label, required, error, className = "", ...props }) {
+const FormInput = React.forwardRef(({ label, required, error, className = "", ...props }, ref) => {
   return (
     <div className={className}>
       <label className="font-bold text-sm uppercase mb-1 block">
         {label} {required && <span className="text-red-600">*</span>}
       </label>
       <input
+        ref={ref}
         className="w-full border-4 border-black p-2 md:p-3 focus:outline-none focus:shadow-brutal-sm font-medium transition-shadow"
         {...props}
       />
       {error && <p className="text-red-600 text-sm mt-1 font-bold">{error}</p>}
     </div>
   )
-}
+})
 
 // Form Select Component
-function FormSelect({ label, required, error, children, className = "", ...props }) {
+const FormSelect = React.forwardRef(({ label, required, error, children, className = "", ...props }, ref) => {
   return (
     <div className={className}>
       <label className="font-bold text-sm uppercase mb-1 block">
         {label} {required && <span className="text-red-600">*</span>}
       </label>
       <select
+        ref={ref}
         className="w-full border-4 border-black p-2 md:p-3 focus:outline-none focus:shadow-brutal-sm font-medium bg-white transition-shadow"
         {...props}
       >
@@ -128,7 +130,7 @@ function FormSelect({ label, required, error, children, className = "", ...props
       {error && <p className="text-red-600 text-sm mt-1 font-bold">{error}</p>}
     </div>
   )
-}
+})
 
 function Hero() {
   return (
