@@ -45,28 +45,36 @@ const schema = z.object({
 
 function Hero() {
   return (
-    <header className="brand-gradient text-white">
-      <div className="max-w-5xl mx-auto px-6 py-10">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-white/10 grid place-items-center font-bold">🌿</div>
-          <h1 className="text-2xl sm:text-3xl font-bold">cyanoindia</h1>
+    <header className="bg-green-500 border-b-8 border-black">
+      <div className="max-w-5xl mx-auto px-6 py-12">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-12 h-12 bg-black text-white grid place-items-center font-bold text-2xl border-4 border-black">
+            C
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-black uppercase tracking-tight">cyanoindia</h1>
         </div>
-        <h2 className="mt-6 text-2xl sm:text-4xl font-extrabold leading-tight">
-          Natural & Organic Farming Certification – Farmer Registration Form
+        <h2 className="text-3xl sm:text-5xl font-black leading-tight mb-6 uppercase">
+          Natural & Organic Farming Certification
         </h2>
-        <p className="mt-4 text-white/90 max-w-3xl">
-          <strong>🌾 Join India’s Natural Farming Revolution – Register Today!</strong><br/>
-          “Grow Natural. Earn More. Get Certified under the National Natural Farming Mission.”
-        </p>
-        <p className="mt-4 text-white/90 max-w-4xl">
-          Every day, our farmers feed the nation. But ask yourself — what are we really eating today?
-          Vegetables, fruits, rice, pulses, and wheat that look fresh… but are loaded with chemicals. Soil that
-          once gave life is now losing its fertility. Agriculture is shrinking. 👉 When the soil becomes sick, the nation becomes sick.
-        </p>
-        <p className="mt-4 text-white/90 max-w-4xl">
-          Through <strong>PGS–India</strong> under the <strong>National Natural Farming Mission</strong>, every farmer can obtain certification,
-          access training on natural inputs, and earn better prices with trusted, verified produce.
-        </p>
+        <div className="bg-white border-4 border-black p-6 shadow-brutal-lg inline-block max-w-3xl">
+          <p className="text-lg font-bold mb-4">
+            Join India's Natural Farming Revolution - Register Today!
+          </p>
+          <p className="text-base leading-relaxed">
+            Grow Natural. Earn More. Get Certified under the National Natural Farming Mission.
+          </p>
+        </div>
+        <div className="mt-8 space-y-4 max-w-4xl">
+          <p className="text-base leading-relaxed font-medium">
+            Every day, our farmers feed the nation. But what are we really eating today?
+            Vegetables, fruits, rice, pulses, and wheat that look fresh but are loaded with chemicals. 
+            When the soil becomes sick, the nation becomes sick.
+          </p>
+          <p className="text-base leading-relaxed font-medium">
+            Through PGS-India under the National Natural Farming Mission, every farmer can obtain certification,
+            access training on natural inputs, and earn better prices with trusted, verified produce.
+          </p>
+        </div>
       </div>
     </header>
   )
@@ -90,10 +98,10 @@ function CropEntry({ index, crop, register, errors, onRemove, canRemove }) {
   const irrigationMethods = ['Drip', 'Sprinkler', 'Flood', 'Rainfed', 'Mixed']
 
   return (
-    <div className="border-2 border-green-200 rounded-xl p-5 bg-green-50/30 relative">
+    <div className="border-4 border-black bg-white p-6 shadow-brutal relative">
       <div className="flex items-center justify-between mb-4">
-        <h4 className="text-lg font-bold text-green-800 flex items-center gap-2">
-          <span className="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center text-sm font-bold">
+        <h4 className="text-lg font-black uppercase">
+          <span className="inline-block w-8 h-8 bg-black text-white text-center leading-8 mr-2 border-2 border-black">
             {index + 1}
           </span>
           Crop Details
@@ -102,9 +110,9 @@ function CropEntry({ index, crop, register, errors, onRemove, canRemove }) {
           <button
             type="button"
             onClick={() => onRemove(index)}
-            className="text-red-600 hover:text-red-800 font-semibold px-3 py-1 rounded-lg hover:bg-red-50 transition-colors"
+            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold border-4 border-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all uppercase text-sm"
           >
-            ✕ Remove
+            Remove
           </button>
         )}
       </div>
@@ -112,26 +120,26 @@ function CropEntry({ index, crop, register, errors, onRemove, canRemove }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Crop Name */}
         <div>
-          <label className="font-medium text-gray-700">
+          <label className="font-bold text-sm uppercase mb-1 block">
             Crop Name <span className="text-red-600">*</span>
           </label>
           <input
-            className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-green-500 focus:outline-none"
+            className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium"
             placeholder="e.g., Rice, Wheat, Tomato"
             {...register(`crops.${index}.cropName`)}
           />
           {errors.crops?.[index]?.cropName && (
-            <p className="text-red-600 text-sm mt-1">{errors.crops[index].cropName.message}</p>
+            <p className="text-red-600 text-sm mt-1 font-bold">{errors.crops[index].cropName.message}</p>
           )}
         </div>
 
         {/* Crop Type */}
         <div>
-          <label className="font-medium text-gray-700">
+          <label className="font-bold text-sm uppercase mb-1 block">
             Crop Type <span className="text-red-600">*</span>
           </label>
           <select
-            className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-green-500 focus:outline-none"
+            className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium bg-white"
             {...register(`crops.${index}.cropType`)}
           >
             <option value="">Select crop type...</option>
@@ -140,15 +148,15 @@ function CropEntry({ index, crop, register, errors, onRemove, canRemove }) {
             ))}
           </select>
           {errors.crops?.[index]?.cropType && (
-            <p className="text-red-600 text-sm mt-1">{errors.crops[index].cropType.message}</p>
+            <p className="text-red-600 text-sm mt-1 font-bold">{errors.crops[index].cropType.message}</p>
           )}
         </div>
 
         {/* Variety */}
         <div>
-          <label className="font-medium text-gray-700">Variety (Optional)</label>
+          <label className="font-bold text-sm uppercase mb-1 block">Variety (Optional)</label>
           <input
-            className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-green-500 focus:outline-none"
+            className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium"
             placeholder="e.g., Basmati, IR-64"
             {...register(`crops.${index}.variety`)}
           />
@@ -156,49 +164,49 @@ function CropEntry({ index, crop, register, errors, onRemove, canRemove }) {
 
         {/* Area Allocated */}
         <div>
-          <label className="font-medium text-gray-700">
+          <label className="font-bold text-sm uppercase mb-1 block">
             Area Allocated <span className="text-red-600">*</span>
           </label>
           <input
-            className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-green-500 focus:outline-none"
+            className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium"
             placeholder="e.g., 2.5 Acres or 1 Ha"
             {...register(`crops.${index}.areaAllocated`)}
           />
           {errors.crops?.[index]?.areaAllocated && (
-            <p className="text-red-600 text-sm mt-1">{errors.crops[index].areaAllocated.message}</p>
+            <p className="text-red-600 text-sm mt-1 font-bold">{errors.crops[index].areaAllocated.message}</p>
           )}
         </div>
 
         {/* Sowing Date */}
         <div>
-          <label className="font-medium text-gray-700">
+          <label className="font-bold text-sm uppercase mb-1 block">
             Sowing Date <span className="text-red-600">*</span>
           </label>
           <input
             type="date"
-            className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-green-500 focus:outline-none"
+            className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium"
             {...register(`crops.${index}.sowingDate`)}
           />
           {errors.crops?.[index]?.sowingDate && (
-            <p className="text-red-600 text-sm mt-1">{errors.crops[index].sowingDate.message}</p>
+            <p className="text-red-600 text-sm mt-1 font-bold">{errors.crops[index].sowingDate.message}</p>
           )}
         </div>
 
         {/* Expected Harvest Date */}
         <div>
-          <label className="font-medium text-gray-700">Expected Harvest Date</label>
+          <label className="font-bold text-sm uppercase mb-1 block">Expected Harvest Date</label>
           <input
             type="date"
-            className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-green-500 focus:outline-none"
+            className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium"
             {...register(`crops.${index}.expectedHarvestDate`)}
           />
         </div>
 
         {/* Irrigation Method */}
         <div>
-          <label className="font-medium text-gray-700">Irrigation Method</label>
+          <label className="font-bold text-sm uppercase mb-1 block">Irrigation Method</label>
           <select
-            className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-green-500 focus:outline-none"
+            className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium bg-white"
             {...register(`crops.${index}.irrigationMethod`)}
           >
             <option value="">Select method...</option>
@@ -210,9 +218,9 @@ function CropEntry({ index, crop, register, errors, onRemove, canRemove }) {
 
         {/* Expected Yield */}
         <div>
-          <label className="font-medium text-gray-700">Expected Yield</label>
+          <label className="font-bold text-sm uppercase mb-1 block">Expected Yield</label>
           <input
-            className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-green-500 focus:outline-none"
+            className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium"
             placeholder="e.g., 30 quintals/acre"
             {...register(`crops.${index}.expectedYield`)}
           />
@@ -242,9 +250,8 @@ export default function App() {
   useEffect(() => {
     const testConnection = async (retryCount = 0) => {
       try {
-        console.log(`🚀 Testing PRODUCTION backend connection (attempt ${retryCount + 1}) to:`, API_BASE)
+        console.log(`Testing PRODUCTION backend connection (attempt ${retryCount + 1}) to:`, API_BASE)
         
-        // Add explicit headers for CORS
         const response = await api.get('/api/test', {
           headers: {
             'Content-Type': 'application/json',
@@ -252,15 +259,14 @@ export default function App() {
           }
         })
         
-        console.log('✅ PRODUCTION backend connection successful:', response.data)
+        console.log('PRODUCTION backend connection successful:', response.data)
         setBackendConnected(true)
         setConnectionError(null)
       } catch (error) {
-        console.error('❌ PRODUCTION backend connection failed:', error)
+        console.error('PRODUCTION backend connection failed:', error)
         
-        // Retry up to 3 times with delay
         if (retryCount < 2) {
-          console.log(`🔄 Retrying connection in 2 seconds... (${retryCount + 1}/3)`)
+          console.log(`Retrying connection in 2 seconds... (${retryCount + 1}/3)`)
           setTimeout(() => testConnection(retryCount + 1), 2000)
           return
         }
@@ -292,7 +298,6 @@ export default function App() {
     if (crops.length > 1) {
       const newCrops = crops.filter((_, i) => i !== index)
       setCrops(newCrops)
-      // Also update form values
       const currentCrops = watch('crops') || []
       const updatedCrops = currentCrops.filter((_, i) => i !== index)
       setValue('crops', updatedCrops, { shouldValidate: true })
@@ -307,7 +312,6 @@ export default function App() {
       console.log('API_BASE:', API_BASE)
       console.log('RAZORPAY_KEY_ID:', RAZORPAY_KEY_ID)
       
-      // Test backend connectivity first
       console.log('Testing backend connectivity...')
       const healthCheck = await api.get('/health')
       console.log('Backend health check:', healthCheck.data)
@@ -348,7 +352,7 @@ export default function App() {
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
             })
-            setStatus({ ok: true, message: "Payment verified. Registration completed! We’ll reach out on WhatsApp." })
+            setStatus({ ok: true, message: "Payment verified. Registration completed! We'll reach out on WhatsApp." })
           } catch (e) {
             console.error(e)
             setStatus({ ok: false, message: "Payment verification failed. Please contact support." })
@@ -372,15 +376,12 @@ export default function App() {
       let errorMessage = "Unable to start payment. Please check your details or try again."
       
       if (e.response) {
-        // API error
         console.error('API Error:', e.response.data)
         errorMessage = `API Error: ${e.response.data?.error || e.response.statusText}`
       } else if (e.request) {
-        // Network error
         console.error('Network Error:', e.request)
         errorMessage = "Network error. Please check your internet connection."
       } else if (e.message) {
-        // Other error
         errorMessage = e.message
       }
       
@@ -405,18 +406,16 @@ export default function App() {
       
       {/* Connection Status Indicator */}
       {connectionError && (
-        <div className="bg-red-50 border-l-4 border-red-400 p-4 mx-6 mt-4">
-          <div className="flex">
+        <div className="bg-red-400 border-4 border-black p-4 mx-6 mt-4 shadow-brutal">
+          <div className="flex gap-3">
             <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-              </svg>
+              <div className="w-6 h-6 bg-black text-white font-black text-center leading-6">!</div>
             </div>
-            <div className="ml-3">
-              <p className="text-sm text-red-700">
-                <strong>🚨 Connection Error:</strong> Unable to connect to payment system
+            <div>
+              <p className="font-bold text-black">
+                Connection Error: Unable to connect to payment system
                 <br />
-                <small>Please try refreshing the page</small>
+                <span className="text-sm font-medium">Please try refreshing the page</span>
               </p>
             </div>
           </div>
@@ -424,18 +423,16 @@ export default function App() {
       )}
       
       {backendConnected && (
-        <div className="bg-green-50 border-l-4 border-green-400 p-4 mx-6 mt-4">
-          <div className="flex">
+        <div className="bg-green-400 border-4 border-black p-4 mx-6 mt-4 shadow-brutal">
+          <div className="flex gap-3">
             <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
+              <div className="w-6 h-6 bg-black text-white font-black text-center leading-6">✓</div>
             </div>
-            <div className="ml-3">
-              <p className="text-sm text-green-700">
-                <strong>✅ Connection Established Successfully</strong>
+            <div>
+              <p className="font-bold text-black">
+                Connection Established Successfully
                 <br />
-                <small>🔴 LIVE PAYMENT SYSTEM ACTIVE</small>
+                <span className="text-sm font-medium">LIVE PAYMENT SYSTEM ACTIVE</span>
               </p>
             </div>
           </div>
@@ -444,134 +441,136 @@ export default function App() {
       
       <main className="flex-1">
         <div className="max-w-5xl mx-auto px-6 py-10">
-          <div className="bg-white shadow rounded-2xl p-6 sm:p-8">
-            <h3 className="text-xl font-bold">Get Your PGS–India Natural Farming Certificate for Your Land</h3>
-            <p className="mt-2 text-gray-600">
+          <div className="bg-white border-8 border-black shadow-brutal-xl p-8">
+            <h3 className="text-2xl font-black uppercase mb-3">Get Your PGS-India Natural Farming Certificate</h3>
+            <p className="text-base leading-relaxed mb-2">
               Your Regional Council will guide training, field verification, certification, and market support.
-              <strong> Registration, Certification &amp; support fee: ₹300 only</strong>.
+            </p>
+            <p className="text-lg font-black">
+              Registration, Certification & support fee: ₹300 only
             </p>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-8">
+            <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
               {/* Personal Information Section */}
-              <div className="border-l-4 border-blue-500 bg-blue-50/50 p-6 rounded-r-xl">
-                <h3 className="text-xl font-bold text-blue-900 mb-4 flex items-center gap-2">
-                  👤 Personal Information
+              <div className="border-4 border-black bg-blue-200 p-6 shadow-brutal">
+                <h3 className="text-xl font-black uppercase mb-4">
+                  Personal Information
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {/* Email (required) */}
                   <div className="col-span-1">
-                    <label className="font-medium text-gray-700">Email <span className="text-red-600">*</span></label>
-                    <input type="email" className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none" placeholder="you@example.com" {...register('email')} />
-                    {errors.email && <p className="text-red-600 text-sm">{errors.email.message}</p>}
+                    <label className="font-bold text-sm uppercase mb-1 block">Email <span className="text-red-600">*</span></label>
+                    <input type="email" className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium" placeholder="you@example.com" {...register('email')} />
+                    {errors.email && <p className="text-red-600 text-sm font-bold">{errors.email.message}</p>}
                   </div>
 
                   {/* Registration Date */}
                   <div className="col-span-1">
-                    <label className="font-medium text-gray-700">Registration Date <span className="text-red-600">*</span></label>
-                    <input type="date" className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none" {...register('registrationDate')} />
-                    {errors.registrationDate && <p className="text-red-600 text-sm">{errors.registrationDate.message}</p>}
+                    <label className="font-bold text-sm uppercase mb-1 block">Registration Date <span className="text-red-600">*</span></label>
+                    <input type="date" className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium" {...register('registrationDate')} />
+                    {errors.registrationDate && <p className="text-red-600 text-sm font-bold">{errors.registrationDate.message}</p>}
                   </div>
 
                   {/* Farmer Name */}
                   <div>
-                    <label className="font-medium text-gray-700">Farmer Name <span className="text-red-600">*</span></label>
-                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none" {...register('farmerName')} />
-                    {errors.farmerName && <p className="text-red-600 text-sm">{errors.farmerName.message}</p>}
+                    <label className="font-bold text-sm uppercase mb-1 block">Farmer Name <span className="text-red-600">*</span></label>
+                    <input className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium" {...register('farmerName')} />
+                    {errors.farmerName && <p className="text-red-600 text-sm font-bold">{errors.farmerName.message}</p>}
                   </div>
 
                   {/* Father/Spouse Name */}
                   <div>
-                    <label className="font-medium text-gray-700">Father / Spouse Name <span className="text-red-600">*</span></label>
-                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none" {...register('fatherSpouseName')} />
-                    {errors.fatherSpouseName && <p className="text-red-600 text-sm">{errors.fatherSpouseName.message}</p>}
+                    <label className="font-bold text-sm uppercase mb-1 block">Father / Spouse Name <span className="text-red-600">*</span></label>
+                    <input className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium" {...register('fatherSpouseName')} />
+                    {errors.fatherSpouseName && <p className="text-red-600 text-sm font-bold">{errors.fatherSpouseName.message}</p>}
                   </div>
 
                   {/* Contact Number */}
                   <div>
-                    <label className="font-medium text-gray-700">Contact Number <span className="text-red-600">*</span></label>
-                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none" placeholder="10-15 digits" {...register('contactNumber')} />
-                    {errors.contactNumber && <p className="text-red-600 text-sm">{errors.contactNumber.message}</p>}
+                    <label className="font-bold text-sm uppercase mb-1 block">Contact Number <span className="text-red-600">*</span></label>
+                    <input className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium" placeholder="10-15 digits" {...register('contactNumber')} />
+                    {errors.contactNumber && <p className="text-red-600 text-sm font-bold">{errors.contactNumber.message}</p>}
                   </div>
 
                   {/* Alternate Email */}
                   <div>
-                    <label className="font-medium text-gray-700">Email ID (optional)</label>
-                    <input type="email" className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-blue-500 focus:outline-none" placeholder="alternate@example.com" {...register('altEmail')} />
+                    <label className="font-bold text-sm uppercase mb-1 block">Email ID (optional)</label>
+                    <input type="email" className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium" placeholder="alternate@example.com" {...register('altEmail')} />
                   </div>
                 </div>
               </div>
 
               {/* Address Information Section */}
-              <div className="border-l-4 border-purple-500 bg-purple-50/50 p-6 rounded-r-xl">
-                <h3 className="text-xl font-bold text-purple-900 mb-4 flex items-center gap-2">
-                  📍 Address Information
+              <div className="border-4 border-black bg-purple-200 p-6 shadow-brutal">
+                <h3 className="text-xl font-black uppercase mb-4">
+                  Address Information
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {/* Address fields */}
                   <div>
-                    <label className="font-medium text-gray-700">Village / Panchayat <span className="text-red-600">*</span></label>
-                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-purple-500 focus:outline-none" {...register('village')} />
-                    {errors.village && <p className="text-red-600 text-sm">{errors.village.message}</p>}
+                    <label className="font-bold text-sm uppercase mb-1 block">Village / Panchayat <span className="text-red-600">*</span></label>
+                    <input className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium" {...register('village')} />
+                    {errors.village && <p className="text-red-600 text-sm font-bold">{errors.village.message}</p>}
                   </div>
                   <div>
-                    <label className="font-medium text-gray-700">Mandal / Block <span className="text-red-600">*</span></label>
-                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-purple-500 focus:outline-none" {...register('mandal')} />
-                    {errors.mandal && <p className="text-red-600 text-sm">{errors.mandal.message}</p>}
+                    <label className="font-bold text-sm uppercase mb-1 block">Mandal / Block <span className="text-red-600">*</span></label>
+                    <input className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium" {...register('mandal')} />
+                    {errors.mandal && <p className="text-red-600 text-sm font-bold">{errors.mandal.message}</p>}
                   </div>
                   <div>
-                    <label className="font-medium text-gray-700">District <span className="text-red-600">*</span></label>
-                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-purple-500 focus:outline-none" {...register('district')} />
-                    {errors.district && <p className="text-red-600 text-sm">{errors.district.message}</p>}
+                    <label className="font-bold text-sm uppercase mb-1 block">District <span className="text-red-600">*</span></label>
+                    <input className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium" {...register('district')} />
+                    {errors.district && <p className="text-red-600 text-sm font-bold">{errors.district.message}</p>}
                   </div>
                   <div>
-                    <label className="font-medium text-gray-700">State <span className="text-red-600">*</span></label>
-                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-purple-500 focus:outline-none" {...register('state')} />
-                    {errors.state && <p className="text-red-600 text-sm">{errors.state.message}</p>}
+                    <label className="font-bold text-sm uppercase mb-1 block">State <span className="text-red-600">*</span></label>
+                    <input className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium" {...register('state')} />
+                    {errors.state && <p className="text-red-600 text-sm font-bold">{errors.state.message}</p>}
                   </div>
 
                   {/* Aadhaar / Farmer ID */}
                   <div className="md:col-span-2">
-                    <label className="font-medium text-gray-700">Aadhaar / Farmer ID (Optional)</label>
-                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-purple-500 focus:outline-none" {...register('aadhaarOrFarmerId')} />
+                    <label className="font-bold text-sm uppercase mb-1 block">Aadhaar / Farmer ID (Optional)</label>
+                    <input className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium" {...register('aadhaarOrFarmerId')} />
                   </div>
                 </div>
               </div>
 
               {/* Land Information Section */}
-              <div className="border-l-4 border-amber-500 bg-amber-50/50 p-6 rounded-r-xl">
-                <h3 className="text-xl font-bold text-amber-900 mb-4 flex items-center gap-2">
-                  🏞️ Land Information
+              <div className="border-4 border-black bg-yellow-200 p-6 shadow-brutal">
+                <h3 className="text-xl font-black uppercase mb-4">
+                  Land Information
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {/* Land size */}
                   <div>
-                    <label className="font-medium text-gray-700">Total Land (in Acres or Hectares) <span className="text-red-600">*</span></label>
-                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-amber-500 focus:outline-none" placeholder="e.g., 2.5 Acres" {...register('totalLand')} />
-                    {errors.totalLand && <p className="text-red-600 text-sm">{errors.totalLand.message}</p>}
+                    <label className="font-bold text-sm uppercase mb-1 block">Total Land (in Acres or Hectares) <span className="text-red-600">*</span></label>
+                    <input className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium" placeholder="e.g., 2.5 Acres" {...register('totalLand')} />
+                    {errors.totalLand && <p className="text-red-600 text-sm font-bold">{errors.totalLand.message}</p>}
                   </div>
                   <div>
-                    <label className="font-medium text-gray-700">Area Under Natural Farming (Ha) <span className="text-red-600">*</span></label>
-                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-amber-500 focus:outline-none" placeholder="e.g., 1.2" {...register('areaUnderNaturalHa')} />
-                    {errors.areaUnderNaturalHa && <p className="text-red-600 text-sm">{errors.areaUnderNaturalHa.message}</p>}
+                    <label className="font-bold text-sm uppercase mb-1 block">Area Under Natural Farming (Ha) <span className="text-red-600">*</span></label>
+                    <input className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium" placeholder="e.g., 1.2" {...register('areaUnderNaturalHa')} />
+                    {errors.areaUnderNaturalHa && <p className="text-red-600 text-sm font-bold">{errors.areaUnderNaturalHa.message}</p>}
                   </div>
                 </div>
               </div>
 
               {/* Multi-Crop Section */}
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-xl p-6">
+              <div className="bg-green-300 border-4 border-black p-6 shadow-brutal">
                 <div className="flex items-center justify-between mb-6">
                   <div>
-                    <h3 className="text-2xl font-bold text-green-800 flex items-center gap-2">
-                      🌱 Crop Details
+                    <h3 className="text-2xl font-black uppercase">
+                      Crop Details
                     </h3>
-                    <p className="text-sm text-gray-600 mt-1">Add details for each crop you cultivate</p>
+                    <p className="text-sm font-medium mt-1">Add details for each crop you cultivate</p>
                   </div>
                   <button
                     type="button"
                     onClick={addCrop}
-                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition-colors flex items-center gap-2"
+                    className="px-4 py-2 bg-black text-white font-black border-4 border-black shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all uppercase text-sm"
                   >
-                    <span className="text-xl">+</span> Add Another Crop
+                    + Add Crop
                   </button>
                 </div>
 
@@ -590,20 +589,20 @@ export default function App() {
                 </div>
                 
                 {errors.crops && typeof errors.crops.message === 'string' && (
-                  <p className="text-red-600 text-sm mt-3">{errors.crops.message}</p>
+                  <p className="text-red-600 text-sm mt-3 font-bold">{errors.crops.message}</p>
                 )}
               </div>
 
               {/* Farming Practice & Experience Section */}
-              <div className="border-l-4 border-teal-500 bg-teal-50/50 p-6 rounded-r-xl">
-                <h3 className="text-xl font-bold text-teal-900 mb-4 flex items-center gap-2">
-                  🚜 Farming Practice & Experience
+              <div className="border-4 border-black bg-teal-200 p-6 shadow-brutal">
+                <h3 className="text-xl font-black uppercase mb-4">
+                  Farming Practice & Experience
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {/* Current Farming Practice */}
                   <div>
-                    <label className="font-medium text-gray-700">Current Farming Practice <span className="text-red-600">*</span></label>
-                    <select className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-teal-500 focus:outline-none" {...register('currentPractice')}>
+                    <label className="font-bold text-sm uppercase mb-1 block">Current Farming Practice <span className="text-red-600">*</span></label>
+                    <select className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium bg-white" {...register('currentPractice')}>
                       <option value="Natural">Natural</option>
                       <option value="Organic">Organic</option>
                       <option value="Conventional">Conventional</option>
@@ -613,36 +612,36 @@ export default function App() {
 
                   {/* Years of experience */}
                   <div>
-                    <label className="font-medium text-gray-700">Years of Farming Experience <span className="text-red-600">*</span></label>
-                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-teal-500 focus:outline-none" placeholder="e.g., 5" {...register('yearsExperience')} />
-                    {errors.yearsExperience && <p className="text-red-600 text-sm">{errors.yearsExperience.message}</p>}
+                    <label className="font-bold text-sm uppercase mb-1 block">Years of Farming Experience <span className="text-red-600">*</span></label>
+                    <input className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium" placeholder="e.g., 5" {...register('yearsExperience')} />
+                    {errors.yearsExperience && <p className="text-red-600 text-sm font-bold">{errors.yearsExperience.message}</p>}
                   </div>
 
                   {/* Irrigation Source */}
                   <div className="md:col-span-2">
-                    <label className="font-medium text-gray-700">Irrigation Source <span className="text-red-600">*</span></label>
+                    <label className="font-bold text-sm uppercase mb-1 block">Irrigation Source <span className="text-red-600">*</span></label>
                     <div className="mt-2 flex gap-4">
                       {['Borewell','Canal','Rainfed'].map(opt => (
-                        <label key={opt} className="inline-flex items-center gap-2 cursor-pointer">
-                          <input type="radio" value={opt} {...register('irrigationSource')} className="w-4 h-4 text-teal-600" />
+                        <label key={opt} className="inline-flex items-center gap-2 cursor-pointer font-medium">
+                          <input type="radio" value={opt} {...register('irrigationSource')} className="w-5 h-5 border-2 border-black" />
                           <span>{opt}</span>
                         </label>
                       ))}
                     </div>
-                    {errors.irrigationSource && <p className="text-red-600 text-sm">{errors.irrigationSource.message}</p>}
+                    {errors.irrigationSource && <p className="text-red-600 text-sm font-bold">{errors.irrigationSource.message}</p>}
                   </div>
 
                   {/* Livestock */}
                   <div className="md:col-span-2">
-                    <label className="font-medium text-gray-700">Livestock (if any)</label>
+                    <label className="font-bold text-sm uppercase mb-1 block">Livestock (if any)</label>
                     <div className="mt-2 grid grid-cols-2 md:grid-cols-3 gap-3">
                       {['POULTRY','AQUA','COW','BUFFALO','GOAT','SHEEP','YAK','CAMEL','None'].map(opt => (
-                        <label key={opt} className="inline-flex items-center gap-2 cursor-pointer">
+                        <label key={opt} className="inline-flex items-center gap-2 cursor-pointer font-medium">
                           <input
                             type="checkbox"
                             checked={(watch('livestock')||[]).includes(opt)}
                             onChange={() => toggleLivestock(opt)}
-                            className="w-4 h-4 text-teal-600 rounded"
+                            className="w-5 h-5 border-2 border-black"
                           />
                           <span>{opt}</span>
                         </label>
@@ -653,18 +652,18 @@ export default function App() {
               </div>
 
               {/* Training & Support Section */}
-              <div className="border-l-4 border-indigo-500 bg-indigo-50/50 p-6 rounded-r-xl">
-                <h3 className="text-xl font-bold text-indigo-900 mb-4 flex items-center gap-2">
-                  📚 Training & Support
+              <div className="border-4 border-black bg-indigo-200 p-6 shadow-brutal">
+                <h3 className="text-xl font-black uppercase mb-4">
+                  Training & Support
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {/* Willing to adopt / training */}
                   <div>
-                    <label className="font-medium text-gray-700">Willing to Adopt Natural Inputs?</label>
+                    <label className="font-bold text-sm uppercase mb-1 block">Willing to Adopt Natural Inputs?</label>
                     <div className="mt-2 flex gap-4">
                       {['Yes','No'].map(opt => (
-                        <label key={opt} className="inline-flex items-center gap-2 cursor-pointer">
-                          <input type="radio" value={opt} {...register('willingNaturalInputs')} className="w-4 h-4 text-indigo-600" />
+                        <label key={opt} className="inline-flex items-center gap-2 cursor-pointer font-medium">
+                          <input type="radio" value={opt} {...register('willingNaturalInputs')} className="w-5 h-5 border-2 border-black" />
                           <span>{opt}</span>
                         </label>
                       ))}
@@ -672,11 +671,11 @@ export default function App() {
                   </div>
 
                   <div>
-                    <label className="font-medium text-gray-700">Training Required?</label>
+                    <label className="font-bold text-sm uppercase mb-1 block">Training Required?</label>
                     <div className="mt-2 flex gap-4">
                       {['Yes','No'].map(opt => (
-                        <label key={opt} className="inline-flex items-center gap-2 cursor-pointer">
-                          <input type="radio" value={opt} {...register('trainingRequired')} className="w-4 h-4 text-indigo-600" />
+                        <label key={opt} className="inline-flex items-center gap-2 cursor-pointer font-medium">
+                          <input type="radio" value={opt} {...register('trainingRequired')} className="w-5 h-5 border-2 border-black" />
                           <span>{opt}</span>
                         </label>
                       ))}
@@ -685,15 +684,15 @@ export default function App() {
 
                   {/* Local group */}
                   <div className="md:col-span-2">
-                    <label className="font-medium text-gray-700">Local Group Name / SHG / FPO</label>
-                    <input className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-indigo-500 focus:outline-none" {...register('localGroup')} />
+                    <label className="font-bold text-sm uppercase mb-1 block">Local Group Name / SHG / FPO</label>
+                    <input className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium" {...register('localGroup')} />
                   </div>
 
                   {/* Preferred season */}
                   <div>
-                    <label className="font-medium text-gray-700">Preferred Cropping Season</label>
-                    <select className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-indigo-500 focus:outline-none" {...register('preferredSeason')}>
-                      <option value="">Select…</option>
+                    <label className="font-bold text-sm uppercase mb-1 block">Preferred Cropping Season</label>
+                    <select className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium bg-white" {...register('preferredSeason')}>
+                      <option value="">Select...</option>
                       <option value="Kharif">Kharif</option>
                       <option value="Rabi">Rabi</option>
                       <option value="Both">Both</option>
@@ -702,68 +701,68 @@ export default function App() {
 
                   {/* Remarks */}
                   <div className="md:col-span-2">
-                    <label className="font-medium text-gray-700">Remarks / Comments</label>
-                    <textarea rows="3" className="mt-1 w-full border-2 border-gray-300 rounded-lg p-2 focus:border-indigo-500 focus:outline-none" {...register('remarks')} />
+                    <label className="font-bold text-sm uppercase mb-1 block">Remarks / Comments</label>
+                    <textarea rows="3" className="w-full border-4 border-black p-2 focus:outline-none focus:shadow-brutal-sm font-medium" {...register('remarks')} />
                   </div>
                 </div>
               </div>
 
               {/* Payment Agreement Section */}
-              <div className="border-2 border-green-500 bg-green-50 p-6 rounded-xl">
+              <div className="border-4 border-black bg-green-400 p-6 shadow-brutal">
                 <div className="flex items-start gap-3">
-                  <input type="checkbox" {...register('agreeFee')} className="w-5 h-5 mt-1 text-green-600 rounded" />
+                  <input type="checkbox" {...register('agreeFee')} className="w-6 h-6 mt-1 border-4 border-black" />
                   <div>
-                    <p className="font-medium text-gray-800">
-                      I agree to pay the registration, certification & support fee of <strong className="text-green-700 text-lg">₹ 300</strong> 
+                    <p className="font-bold text-lg text-black">
+                      I agree to pay the registration, certification & support fee of ₹300
                       <span className="text-red-600"> *</span>
                     </p>
-                    <p className="text-sm text-gray-600 mt-1">
-                      This fee covers PGS–India certification, training, field verification, and ongoing market support
+                    <p className="text-sm font-medium text-black mt-1">
+                      This fee covers PGS-India certification, training, field verification, and ongoing market support
                     </p>
                   </div>
                 </div>
-                {errors.agreeFee && <p className="text-red-600 text-sm mt-2">{errors.agreeFee.message}</p>}
+                {errors.agreeFee && <p className="text-red-600 text-sm mt-2 font-bold">{errors.agreeFee.message}</p>}
               </div>
 
               {/* Submit */}
-              <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-8 py-4 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold text-lg shadow-lg disabled:opacity-60 transition-all transform hover:scale-105"
+                  className="px-8 py-4 bg-black text-white font-black text-lg shadow-brutal-xl border-4 border-black hover:translate-x-1 hover:translate-y-1 hover:shadow-brutal transition-all disabled:opacity-60 uppercase"
                 >
-                  {submitting ? '⏳ Processing…' : '💳 Pay ₹300 & Submit Registration'}
+                  {submitting ? 'Processing...' : 'Pay ₹300 & Submit'}
                 </button>
                 <a 
                   href="https://cyanoindia.com" 
                   target="_blank" 
                   rel="noreferrer" 
-                  className="px-6 py-3 rounded-xl border-2 border-green-600 text-green-700 hover:bg-green-50 font-semibold transition-colors"
+                  className="px-6 py-3 border-4 border-black bg-white font-bold shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all uppercase"
                 >
-                  🌐 Learn more at cyanoindia.com
+                  Learn More
                 </a>
               </div>
 
               {status && (
-                <div className={`mt-3 p-4 rounded-xl border-2 ${status.ok ? 'bg-green-50 border-green-400 text-green-800' : 'bg-red-50 border-red-400 text-red-800'}`}>
+                <div className={`mt-3 p-4 border-4 border-black shadow-brutal ${status.ok ? 'bg-green-300' : 'bg-red-300'}`}>
                   <div className="flex items-start gap-2">
-                    <span className="text-2xl">{status.ok ? '✅' : '❌'}</span>
-                    <p className="font-medium">{status.message}</p>
+                    <span className="text-2xl font-black">{status.ok ? '✓' : '✗'}</span>
+                    <p className="font-bold">{status.message}</p>
                   </div>
                 </div>
               )}
             </form>
 
-            <div className="mt-10 text-sm text-gray-500">
-              <p>📞 WhatsApp: <a href="https://wa.me/918331919474" className="text-cyano-700 font-semibold">8331919474</a></p>
-              <p>🌐 <a href="https://cyanoindia.com" className="text-cyano-700 font-semibold">cyanoindia.com</a></p>
+            <div className="mt-10 text-sm font-medium">
+              <p>WhatsApp: <a href="https://wa.me/918331919474" className="font-black underline">8331919474</a></p>
+              <p><a href="https://cyanoindia.com" className="font-black underline">cyanoindia.com</a></p>
             </div>
           </div>
         </div>
       </main>
-      <footer className="border-t bg-white">
-        <div className="max-w-5xl mx-auto px-6 py-6 text-sm text-gray-500">
-          © {new Date().getFullYear()} cyanoindia · PGS–India Natural & Organic Farming Certification support
+      <footer className="border-t-8 border-black bg-white">
+        <div className="max-w-5xl mx-auto px-6 py-6 text-sm font-medium text-center">
+          © {new Date().getFullYear()} cyanoindia · PGS-India Natural & Organic Farming Certification support
         </div>
       </footer>
     </div>
