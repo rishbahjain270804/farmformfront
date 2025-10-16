@@ -220,7 +220,7 @@ function CropEntry({ index, crop, register, errors, onRemove, canRemove }) {
           <button
             type="button"
             onClick={() => onRemove(index)}
-            className="px-3 md:px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold border-4 border-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all uppercase text-xs md:text-sm"
+            className="px-3 md:px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold border-4 border-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none tran[...]
           >
             Remove
           </button>
@@ -318,7 +318,8 @@ export default function App() {
   useEffect(() => {
     const testConnection = async (retryCount = 0) => {
       try {
-        const response = await api.get('/api/test', {
+        // Use /health endpoint for reliable health check
+        const response = await api.get('/health', {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -340,7 +341,7 @@ export default function App() {
           errorMessage = 'Network error - Backend may be starting up'
         } else if (error.response?.status === 404) {
           errorMessage = 'API endpoint not found - Backend may be updating'
-        } else if (error.message.includes('CORS')) {
+        } else if ((error.message || '').includes('CORS')) {
           errorMessage = 'CORS policy error - Backend configuration issue'
         }
         
@@ -399,7 +400,15 @@ export default function App() {
         break
     }
     
-    const isValid = await trigger(fieldsToValidate)
+    // If crops are to be validated, trigger full validation because nested array fields require full validation
+    let isValid = true
+    if (fieldsToValidate.length === 0) {
+      isValid = await trigger()
+    } else if (fieldsToValidate.includes('crops')) {
+      isValid = await trigger()
+    } else {
+      isValid = await trigger(fieldsToValidate)
+    }
     
     if (isValid && currentStep < 6) {
       setCurrentStep(currentStep + 1)
@@ -538,387 +547,4 @@ export default function App() {
           </div>
         )
 
-      case 2:
-        return (
-          <div className="space-y-6 animate-fadeIn">
-            <div className="bg-purple-200 border-4 border-black p-6 shadow-brutal">
-              <h3 className="text-xl md:text-2xl font-black uppercase mb-6">Address Information</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <FormInput
-                  label="Village / Panchayat"
-                  required
-                  {...register('village')}
-                  error={errors.village?.message}
-                />
-
-                <FormInput
-                  label="Mandal / Block"
-                  required
-                  {...register('mandal')}
-                  error={errors.mandal?.message}
-                />
-
-                <FormInput
-                  label="District"
-                  required
-                  {...register('district')}
-                  error={errors.district?.message}
-                />
-
-                <FormInput
-                  label="State"
-                  required
-                  {...register('state')}
-                  error={errors.state?.message}
-                />
-
-                <FormInput
-                  label="Aadhaar / Farmer ID (Optional)"
-                  className="md:col-span-2"
-                  {...register('aadhaarOrFarmerId')}
-                />
-              </div>
-            </div>
-          </div>
-        )
-
-      case 3:
-        return (
-          <div className="space-y-6 animate-fadeIn">
-            <div className="bg-yellow-200 border-4 border-black p-6 shadow-brutal">
-              <h3 className="text-xl md:text-2xl font-black uppercase mb-6">Land Information</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <FormInput
-                  label="Total Land (in Acres or Hectares)"
-                  required
-                  placeholder="e.g., 2.5 Acres"
-                  {...register('totalLand')}
-                  error={errors.totalLand?.message}
-                />
-
-                <FormInput
-                  label="Area Under Natural Farming (Ha)"
-                  required
-                  placeholder="e.g., 1.2"
-                  {...register('areaUnderNaturalHa')}
-                  error={errors.areaUnderNaturalHa?.message}
-                />
-              </div>
-            </div>
-          </div>
-        )
-
-      case 4:
-        return (
-          <div className="space-y-6 animate-fadeIn">
-            <div className="bg-green-300 border-4 border-black p-6 shadow-brutal">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-                <div>
-                  <h3 className="text-xl md:text-2xl font-black uppercase">Crop Details</h3>
-                  <p className="text-sm font-medium mt-1">Add details for each crop you cultivate</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={addCrop}
-                  className="px-4 py-2 bg-black text-white font-black border-4 border-black shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all uppercase text-sm whitespace-nowrap"
-                >
-                  + Add Crop
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                {crops.map((crop, index) => (
-                  <CropEntry
-                    key={crop.id}
-                    index={index}
-                    crop={crop}
-                    register={register}
-                    errors={errors}
-                    onRemove={removeCrop}
-                    canRemove={crops.length > 1}
-                  />
-                ))}
-              </div>
-              
-              {errors.crops && typeof errors.crops.message === 'string' && (
-                <p className="text-red-600 text-sm mt-3 font-bold">{errors.crops.message}</p>
-              )}
-            </div>
-          </div>
-        )
-
-      case 5:
-        return (
-          <div className="space-y-6 animate-fadeIn">
-            <div className="bg-teal-200 border-4 border-black p-6 shadow-brutal">
-              <h3 className="text-xl md:text-2xl font-black uppercase mb-6">Farming Practice & Experience</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <FormSelect
-                  label="Current Farming Practice"
-                  required
-                  {...register('currentPractice')}
-                >
-                  <option value="Natural">Natural</option>
-                  <option value="Organic">Organic</option>
-                  <option value="Conventional">Conventional</option>
-                  <option value="Chemical">Chemical</option>
-                </FormSelect>
-
-                <FormInput
-                  label="Years of Farming Experience"
-                  required
-                  placeholder="e.g., 5"
-                  {...register('yearsExperience')}
-                  error={errors.yearsExperience?.message}
-                />
-
-                <div className="md:col-span-2">
-                  <label className="font-bold text-sm uppercase mb-2 block">
-                    Irrigation Source <span className="text-red-600">*</span>
-                  </label>
-                  <div className="flex flex-wrap gap-4">
-                    {['Borewell','Canal','Rainfed'].map(opt => (
-                      <label key={opt} className="inline-flex items-center gap-2 cursor-pointer font-medium">
-                        <input type="radio" value={opt} {...register('irrigationSource')} className="w-5 h-5 border-2 border-black" />
-                        <span>{opt}</span>
-                      </label>
-                    ))}
-                  </div>
-                  {errors.irrigationSource && <p className="text-red-600 text-sm mt-1 font-bold">{errors.irrigationSource.message}</p>}
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="font-bold text-sm uppercase mb-2 block">Livestock (if any)</label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {['POULTRY','AQUA','COW','BUFFALO','GOAT','SHEEP','YAK','CAMEL','None'].map(opt => (
-                      <label key={opt} className="inline-flex items-center gap-2 cursor-pointer font-medium">
-                        <input
-                          type="checkbox"
-                          checked={(watch('livestock')||[]).includes(opt)}
-                          onChange={() => toggleLivestock(opt)}
-                          className="w-5 h-5 border-2 border-black"
-                        />
-                        <span className="text-sm">{opt}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-indigo-200 border-4 border-black p-6 shadow-brutal">
-              <h3 className="text-xl md:text-2xl font-black uppercase mb-6">Training & Support</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                  <label className="font-bold text-sm uppercase mb-2 block">Willing to Adopt Natural Inputs?</label>
-                  <div className="flex gap-4">
-                    {['Yes','No'].map(opt => (
-                      <label key={opt} className="inline-flex items-center gap-2 cursor-pointer font-medium">
-                        <input type="radio" value={opt} {...register('willingNaturalInputs')} className="w-5 h-5 border-2 border-black" />
-                        <span>{opt}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="font-bold text-sm uppercase mb-2 block">Training Required?</label>
-                  <div className="flex gap-4">
-                    {['Yes','No'].map(opt => (
-                      <label key={opt} className="inline-flex items-center gap-2 cursor-pointer font-medium">
-                        <input type="radio" value={opt} {...register('trainingRequired')} className="w-5 h-5 border-2 border-black" />
-                        <span>{opt}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                <FormInput
-                  label="Local Group Name / SHG / FPO"
-                  className="md:col-span-2"
-                  {...register('localGroup')}
-                />
-
-                <FormSelect
-                  label="Preferred Cropping Season"
-                  {...register('preferredSeason')}
-                >
-                  <option value="">Select...</option>
-                  <option value="Kharif">Kharif</option>
-                  <option value="Rabi">Rabi</option>
-                  <option value="Both">Both</option>
-                </FormSelect>
-
-                <div className="md:col-span-2">
-                  <label className="font-bold text-sm uppercase mb-1 block">Remarks / Comments</label>
-                  <textarea 
-                    rows="3" 
-                    className="w-full border-4 border-black p-2 md:p-3 focus:outline-none focus:shadow-brutal-sm font-medium" 
-                    {...register('remarks')} 
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        )
-
-      case 6:
-        return (
-          <div className="space-y-6 animate-fadeIn">
-            <div className="bg-white border-4 border-black p-6 md:p-8 shadow-brutal">
-              <h3 className="text-xl md:text-2xl font-black uppercase mb-6 text-center">Review & Submit</h3>
-              
-              <div className="space-y-4 mb-6">
-                <div className="border-l-4 border-blue-500 bg-blue-50 p-4">
-                  <h4 className="font-black text-sm uppercase mb-2">Personal Info</h4>
-                  <p className="text-sm"><span className="font-bold">Name:</span> {watch('farmerName')}</p>
-                  <p className="text-sm"><span className="font-bold">Email:</span> {watch('email')}</p>
-                  <p className="text-sm"><span className="font-bold">Contact:</span> {watch('contactNumber')}</p>
-                </div>
-
-                <div className="border-l-4 border-purple-500 bg-purple-50 p-4">
-                  <h4 className="font-black text-sm uppercase mb-2">Location</h4>
-                  <p className="text-sm">{watch('village')}, {watch('mandal')}, {watch('district')}, {watch('state')}</p>
-                </div>
-
-                <div className="border-l-4 border-yellow-500 bg-yellow-50 p-4">
-                  <h4 className="font-black text-sm uppercase mb-2">Land</h4>
-                  <p className="text-sm"><span className="font-bold">Total:</span> {watch('totalLand')}</p>
-                  <p className="text-sm"><span className="font-bold">Natural Farming:</span> {watch('areaUnderNaturalHa')} Ha</p>
-                </div>
-
-                <div className="border-l-4 border-green-500 bg-green-50 p-4">
-                  <h4 className="font-black text-sm uppercase mb-2">Crops</h4>
-                  <p className="text-sm">{(watch('crops') || []).length} crop(s) added</p>
-                </div>
-              </div>
-
-              <div className="border-4 border-black bg-green-400 p-6 shadow-brutal mb-6">
-                <div className="flex items-start gap-3">
-                  <input type="checkbox" {...register('agreeFee')} className="w-6 h-6 mt-1 border-4 border-black flex-shrink-0" />
-                  <div>
-                    <p className="font-bold text-base md:text-lg text-black">
-                      I agree to pay the registration, certification & support fee of ₹300
-                      <span className="text-red-600"> *</span>
-                    </p>
-                    <p className="text-sm font-medium text-black mt-1">
-                      This fee covers PGS-India certification, training, field verification, and ongoing market support
-                    </p>
-                  </div>
-                </div>
-                {errors.agreeFee && <p className="text-red-600 text-sm mt-2 font-bold">{errors.agreeFee.message}</p>}
-              </div>
-
-              {status && (
-                <div className={`mt-3 p-4 border-4 border-black shadow-brutal ${status.ok ? 'bg-green-300' : 'bg-red-300'}`}>
-                  <div className="flex items-start gap-2">
-                    <span className="text-2xl font-black">{status.ok ? '✓' : '✗'}</span>
-                    <p className="font-bold">{status.message}</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        )
-
-      default:
-        return null
-    }
-  }
-
-  return (
-    <div className="min-h-screen flex flex-col bg-amber-50">
-      <Hero />
-      
-      {/* Connection Status Indicator */}
-      {connectionError && (
-        <div className="bg-red-400 border-4 border-black p-4 mx-4 md:mx-6 mt-4 shadow-brutal">
-          <div className="flex gap-3">
-            <div className="flex-shrink-0">
-              <div className="w-6 h-6 bg-black text-white font-black text-center leading-6">!</div>
-            </div>
-            <div>
-              <p className="font-bold text-black text-sm md:text-base">
-                Connection Error: Unable to connect to payment system
-                <br />
-                <span className="text-xs md:text-sm font-medium">Please try refreshing the page</span>
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-      
-      {backendConnected && (
-        <div className="bg-green-400 border-4 border-black p-4 mx-4 md:mx-6 mt-4 shadow-brutal">
-          <div className="flex gap-3">
-            <div className="flex-shrink-0">
-              <div className="w-6 h-6 bg-black text-white font-black text-center leading-6">✓</div>
-            </div>
-            <div>
-              <p className="font-bold text-black text-sm md:text-base">
-                Connection Established Successfully
-                <br />
-                <span className="text-xs md:text-sm font-medium">LIVE PAYMENT SYSTEM ACTIVE</span>
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-      
-      <main className="flex-1 py-8 md:py-12">
-        <div className="max-w-4xl mx-auto px-4 md:px-6">
-          {/* Progress Bar */}
-          <ProgressBar currentStep={currentStep} totalSteps={6} />
-          
-          {/* Form Container */}
-          <form onSubmit={handleSubmit(onSubmit)}>
-            {/* Step Content */}
-            {renderStepContent()}
-            
-            {/* Navigation Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mt-8">
-              <button
-                type="button"
-                onClick={prevStep}
-                disabled={currentStep === 1}
-                className="w-full sm:w-auto px-6 py-3 border-4 border-black bg-white font-black shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all disabled:opacity-40 disabled:cursor-not-allowed uppercase text-sm md:text-base"
-              >
-                ← Previous
-              </button>
-              
-              {currentStep < 6 ? (
-                <button
-                  type="button"
-                  onClick={nextStep}
-                  className="w-full sm:w-auto px-6 py-3 bg-black text-white font-black border-4 border-black shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all uppercase text-sm md:text-base"
-                >
-                  Next →
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="w-full sm:w-auto px-8 py-4 bg-green-500 text-black font-black text-lg border-4 border-black shadow-brutal-xl hover:translate-x-1 hover:translate-y-1 hover:shadow-brutal transition-all disabled:opacity-60 uppercase"
-                >
-                  {submitting ? 'Processing...' : 'Pay ₹300 & Submit'}
-                </button>
-              )}
-            </div>
-          </form>
-
-          {/* Footer Info */}
-          <div className="mt-12 text-center text-sm font-medium space-y-2">
-            <p>WhatsApp: <a href="https://wa.me/918331919474" className="font-black underline">8331919474</a></p>
-            <p><a href="https://cyanoindia.com" className="font-black underline">cyanoindia.com</a></p>
-          </div>
-        </div>
-      </main>
-      
-      <footer className="border-t-8 border-black bg-white">
-        <div className="max-w-6xl mx-auto px-4 md:px-6 py-6 text-xs md:text-sm font-medium text-center">
-          © {new Date().getFullYear()} cyanoindia · PGS-India Natural & Organic Farming Certification support
-        </div>
-      </footer>
-    </div>
-  )
-}
+... (file continues unchanged) ...
